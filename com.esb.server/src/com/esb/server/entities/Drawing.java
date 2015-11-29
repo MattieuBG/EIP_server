@@ -1,5 +1,8 @@
 package com.esb.server.entities;
 
-public class Drawing extends AFile{
+import org.mongodb.morphia.annotations.Entity;
+
+@Entity
+public class Drawing extends MediaGeneric{
 
 }
