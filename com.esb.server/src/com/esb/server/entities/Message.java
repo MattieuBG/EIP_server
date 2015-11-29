@@ -15,20 +15,20 @@ public class Message
 	###############################
 	*/
 	@Id
-	private Long id;
+	private String id;
 	private String contenu;
 	private Date creationDate;
 	private Date deletedDate;
 	@Reference
-	private Conversation idConversation;
+	private Conversation conversation;
 	@Reference
-	private User idUser;
+	private User user;
 	/*
 	###############################
 	#         Getter              #
 	###############################
 	*/
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 	public String getContenu() {
@@ -41,17 +41,17 @@ public class Message
 		return deletedDate;
 	}
 	public Conversation getIdConversation() {
-		return idConversation;
+		return conversation;
 	}
 	public User getIdUser() {
-		return idUser;
+		return user;
 	}
 	/*
 	###############################
 	#         Setter              #
 	###############################
 	*/
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	public void setContenu(String contenu) {
@@ -64,10 +64,10 @@ public class Message
 		this.deletedDate = deletedDate;
 	}
 	public void setIdConversation(Conversation idConversation) {
-		this.idConversation = idConversation;
+		this.conversation = idConversation;
 	}
 	public void setIdUser(User idUser) {
-		this.idUser = idUser;
+		this.user = idUser;
 	}
 	/*
 	###############################

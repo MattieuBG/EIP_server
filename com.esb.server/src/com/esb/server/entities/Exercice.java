@@ -1,12 +1,111 @@
 package com.esb.server.entities;
 
-public class Exercice {
-//	private Long	id;
-//	private String	titre;
-//	private String	description;
-//	private Long	idModule;
-//	private ExerciceStateEnum	state;
-//	private Question []	questions;
-//	private Response []	responses;
-//	private ExerciceTypeEnum	type;
+import java.util.Collection;
+
+import org.mongodb.morphia.annotations.Embedded;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Reference;
+
+@Entity
+public class Exercice 
+{
+	/*
+	###############################
+	#         Attributes          #
+	###############################
+	*/
+	public enum ExerciceStateEnum {
+		NOTSTARTED, DOING
+	}
+	public enum ExerciceTypeEnum {
+		QCM, NORMAL
+	}
+	@Id
+	private String	id;
+	private String	title;
+	private String	description;
+	@Reference
+	private Module	module;
+	private ExerciceStateEnum	state;
+	@Embedded
+	private Collection<Question>	questions;
+	@Embedded
+	private Collection<Response>	responses;
+	private ExerciceTypeEnum	type;
+	/*
+	###############################
+	#           Getter            #
+	###############################
+	*/
+	public String getId() {
+		return id;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public Module getModule() {
+		return module;
+	}
+	public ExerciceStateEnum getState() {
+		return state;
+	}
+	public Collection<Question> getQuestions() {
+		return questions;
+	}
+	public Collection<Response> getResponses() {
+		return responses;
+	}
+	public ExerciceTypeEnum getType() {
+		return type;
+	}
+	/*
+	###############################
+	#         Setter              #
+	###############################
+	*/
+	public void setId(String id) {
+		this.id = id;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public void setModule(Module module) {
+		this.module = module;
+	}
+	public void setState(ExerciceStateEnum state) {
+		this.state = state;
+	}
+	public void setQuestions(Collection<Question> questions) {
+		this.questions = questions;
+	}
+	public void setResponses(Collection<Response> responses) {
+		this.responses = responses;
+	}
+	public void setType(ExerciceTypeEnum type) {
+		this.type = type;
+	}
+	/*
+	###############################
+	#        Other Methods        #
+	###############################
+	*/
+	public String toString()
+	{
+		String attributes;
+		
+		attributes = "[id : "+this.getId()+
+					", title : "+this.getTitle()+
+					", description : "+this.getDescription()+
+					", state : "+this.getState()+
+					", type : "+this.getType()+
+					"]";
+		return attributes;
+	}
 }

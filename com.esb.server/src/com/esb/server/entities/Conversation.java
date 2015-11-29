@@ -20,7 +20,7 @@ public class Conversation
 	}
 	
 	@Id
-	private Long id;
+	private String id;
 	private String title;
 	@Reference
 	private Collection<User> userList;
@@ -31,7 +31,7 @@ public class Conversation
 	#         Getter              #
 	###############################
 	*/
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 	public String getTitle() {
@@ -51,7 +51,7 @@ public class Conversation
 	#         Setter              #
 	###############################
 	*/
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	public void setTitle(String title) {

@@ -15,7 +15,7 @@ public class Classe
 	###############################
 	*/
 	@Id
-	private Long id;
+	private String id;
 	private String title;
 	private Date creationDate;
 	private Date modifiedDate;
@@ -26,7 +26,7 @@ public class Classe
 	#         Getter              #
 	###############################
 	*/
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 	public String getTitle() {
@@ -46,7 +46,7 @@ public class Classe
 	#         Setter              #
 	###############################
 	*/
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	public void setTitle(String title) {

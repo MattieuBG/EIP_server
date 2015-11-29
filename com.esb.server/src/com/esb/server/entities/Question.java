@@ -1,6 +1,28 @@
 package com.esb.server.entities;
 
-public class Question {
-	private Long	id;
-	private String	description;
+import org.mongodb.morphia.annotations.Entity;
+
+@Entity
+public class Question extends AQuestionAndAnswer
+{
+	/*
+	###############################
+	#         Attributes          #
+	###############################
+	*/
+	/*
+	###############################
+	#           Getter            #
+	###############################
+	*/
+	/*
+	###############################
+	#         Setter              #
+	###############################
+	*/
+	/*
+	###############################
+	#         Other Methods       #
+	###############################
+	*/
 }

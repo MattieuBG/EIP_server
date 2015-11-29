@@ -1,6 +1,28 @@
 package com.esb.server.entities;
 
-public class Response {
-	private Long	id;
-	private String	description;
+import org.mongodb.morphia.annotations.Entity;
+
+@Entity
+public class Response extends AQuestionAndAnswer
+{
+	/*
+	###############################
+	#         Attributes          #
+	###############################
+	*/
+	/*
+	###############################
+	#           Getter            #
+	###############################
+	*/
+	/*
+	###############################
+	#         Setter              #
+	###############################
+	*/
+	/*
+	###############################
+	#         Other Methods       #
+	###############################
+	*/
 }

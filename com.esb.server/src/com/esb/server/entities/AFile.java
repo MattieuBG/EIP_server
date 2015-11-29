@@ -4,7 +4,7 @@ import java.util.Date;
 
 import org.mongodb.morphia.annotations.Id;
 
-public abstract class MediaGeneric
+public abstract class AFile
 {
 	/*
 	###############################
@@ -12,7 +12,7 @@ public abstract class MediaGeneric
 	###############################
 	*/
 	@Id
-	private Long id;
+	private String id;
 	private String name;
 	private String path;
 	private String description;
@@ -24,7 +24,7 @@ public abstract class MediaGeneric
 	#         Getter              #
 	###############################
 	*/
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 	public String getName() {
@@ -50,7 +50,7 @@ public abstract class MediaGeneric
 	#         Setter              #
 	###############################
 	*/
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	public void setName(String name) {

@@ -1,38 +1,41 @@
 package com.esb.server.entities;
 
 import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Reference;
 
 @Entity
-public class Cours extends MediaGeneric
+public class Cours extends AFile
 {
 	/*
 	###############################
 	#         Attributes          #
 	###############################
 	*/
-	Long idModule; /* ça serait pas plus private Module idModule */
-	Long idCreator; /* ça serait pas plus private User idCreator */
+	@Reference
+	private Module module;
+	@Reference
+	private User creator;
 	/*
 	###############################
 	#         Getter              #
 	###############################
 	*/
-	public Long getIdModule() {
-		return idModule;
+	public Module getModule() {
+		return module;
 	}
-	public Long getIdCreator() {
-		return idCreator;
+	public User getCreator() {
+		return creator;
 	}
 	/*
 	###############################
 	#         Setter              #
 	###############################
 	*/
-	public void setIdModule(Long idModule) {
-		this.idModule = idModule;
+	public void setModule(Module module) {
+		this.module = module;
 	}
-	public void setIdCreator(Long idCreator) {
-		this.idCreator = idCreator;
+	public void setCreator(User creator) {
+		this.creator = creator;
 	}
 	/*
 	###############################
@@ -43,8 +46,8 @@ public class Cours extends MediaGeneric
 	{
 		String attributes;
 		
-		attributes = "[idCreator : "+this.getIdCreator()+
-					"idModule : "+this.getIdModule()+
+		attributes = "[creator : "+this.getCreator()+
+					", module : "+this.getModule()+
 					"]";
 		return attributes;
 	}

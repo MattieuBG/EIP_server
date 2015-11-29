@@ -3,57 +3,90 @@ package com.esb.server.entities;
 import java.util.Date;
 import java.util.List;
 
+import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
 
 @Entity
-public class Homework {
+public class Homework
+{
+	/*
+	###############################
+	#         Attributes          #
+	###############################
+	*/
 	@Id
 	private Long	id;
 	private Date	toDoDate;
 	private Date	finishedDate;
 	@Reference
-	private User	Student;
+	private User	student;
 	@Reference
-	private Module	Module;
+	private Module	module;
+	@Embedded
 	private List<Exercice> exercices;
+	/*
+	###############################
+	#           Getter            #
+	###############################
+	*/
 	public Long getId() {
 		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
 	}
 	public Date getToDoDate() {
 		return toDoDate;
 	}
-	public void setToDoDate(Date toDoDate) {
-		this.toDoDate = toDoDate;
-	}
 	public Date getFinishedDate() {
 		return finishedDate;
 	}
-	public void setFinishedDate(Date finishedDate) {
-		this.finishedDate = finishedDate;
-	}
 	public User getStudent() {
-		return Student;
-	}
-	public void setStudent(User student) {
-		Student = student;
+		return student;
 	}
 	public Module getModule() {
-		return Module;
-	}
-	public void setModule(Module module) {
-		Module = module;
+		return module;
 	}
 	public List<Exercice> getExercices() {
 		return exercices;
 	}
+	/*
+	###############################
+	#         Setter              #
+	###############################
+	*/
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public void setToDoDate(Date toDoDate) {
+		this.toDoDate = toDoDate;
+	}
+	public void setFinishedDate(Date finishedDate) {
+		this.finishedDate = finishedDate;
+	}
+	public void setStudent(User student) {
+		this.student = student;
+	}
+	public void setModule(Module module) {
+		this.module = module;
+	}
 	public void setExercices(List<Exercice> exercices) {
 		this.exercices = exercices;
 	}
-
-	
+	/*
+	###############################
+	#        Other Methods        #
+	###############################
+	*/
+	public String toString()
+	{
+		String attributes;
+		
+		attributes = "[id : "+this.getId()+
+				", toDoDate : "+this.getToDoDate()+
+				", finishedDate : "+this.getFinishedDate()+
+				", student : "+this.getStudent()+
+				", module : "+this.getModule()+
+				"]";
+		return attributes;
+	}
 }
