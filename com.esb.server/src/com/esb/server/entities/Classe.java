@@ -1,5 +1,38 @@
 package com.esb.server.entities;
 
-public class Classe {
+import org.mongodb.morphia.annotations.Entity;
 
+@Entity
+public class Classe
+{
+	/*
+	###############################
+	#         Attributes          #
+	###############################
+	*/
+
+	/*
+	###############################
+	#         Getter              #
+	###############################
+	*/
+
+	/*
+	###############################
+	#         Setter              #
+	###############################
+	*/
+
+	/*
+	###############################
+	#        Other Methods        #
+	###############################
+	*/
+	public String toString()
+	{
+		String attributes;
+		
+		attributes = "[";
+		return attributes;
+	}
 }

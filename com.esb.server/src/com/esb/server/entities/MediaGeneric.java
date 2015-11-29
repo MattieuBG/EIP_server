@@ -17,8 +17,8 @@ public abstract class MediaGeneric
 	private String path;
 	private String description;
 	private Date creationDate;
-	private Date lastModified;
-	private Date deleted;
+	private Date modifiedDate;
+	private Date deletedDate;
 	/*
 	###############################
 	#         Getter              #
@@ -39,11 +39,11 @@ public abstract class MediaGeneric
 	public Date getCreationDate() {
 		return creationDate;
 	}
-	public Date getLastModified() {
-		return lastModified;
+	public Date getModifiedDate() {
+		return modifiedDate;
 	}
-	public Date getDeleted() {
-		return deleted;
+	public Date getDeletedDate() {
+		return deletedDate;
 	}
 	/*
 	###############################
@@ -65,11 +65,11 @@ public abstract class MediaGeneric
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
 	}
-	public void setLastModified(Date lastModified) {
-		this.lastModified = lastModified;
+	public void setModifiedDate(Date lastModified) {
+		this.modifiedDate = lastModified;
 	}
-	public void setDeleted(Date deleted) {
-		this.deleted = deleted;
+	public void setDeletedDate(Date deleted) {
+		this.deletedDate = deleted;
 	}	
 	/*
 	###############################
@@ -86,8 +86,8 @@ public abstract class MediaGeneric
 					", description : "+this.getDescription()+
 					", path : "+this.getPath()+
 					", create : "+this.getCreationDate()+
-					", lastUpdate : "+this.getLastModified()+
-					", deleted : "+this.getDeleted()+
+					", lastUpdate : "+this.getModifiedDate()+
+					", deleted : "+this.getDeletedDate()+
 					"]";
 		return attributes;
 	}
