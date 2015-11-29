@@ -5,6 +5,7 @@ import java.util.Date;
 
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Reference;
 
 @Entity
 public class Conversation
@@ -21,6 +22,7 @@ public class Conversation
 	@Id
 	private Long id;
 	private String title;
+	@Reference
 	private Collection<User> userList;
 	private Date dateCreation;
 	private ConversationStateEnum state;

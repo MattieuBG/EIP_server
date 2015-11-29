@@ -5,6 +5,7 @@ import java.util.Date;
 
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Reference;
 
 @Entity
 public class Module
@@ -16,11 +17,14 @@ public class Module
 	*/
 	@Id
 	private String id;
+	@Reference
 	private Collection<User> teacherList;
 	private String title;
 	private Date creationDate;
 	private Date modifiedDate;
+	@Reference
 	private Collection<User> studentList;
+	@Reference
 	private Collection<Homework> homeworkList;
 	/*
 	###############################

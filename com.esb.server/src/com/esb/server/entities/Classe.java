@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Reference;
 
 @Entity
 public class Classe
@@ -18,6 +19,7 @@ public class Classe
 	private String title;
 	private Date creationDate;
 	private Date modifiedDate;
+	@Reference
 	private User supervisor;
 	/*
 	###############################

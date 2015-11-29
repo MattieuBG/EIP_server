@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Reference;
 
 @Entity
 public class Message
@@ -18,7 +19,9 @@ public class Message
 	private String contenu;
 	private Date creationDate;
 	private Date deletedDate;
+	@Reference
 	private Conversation idConversation;
+	@Reference
 	private User idUser;
 	/*
 	###############################
