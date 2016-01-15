@@ -29,9 +29,9 @@ public class Exercice
 	private Module	module;
 	private ExerciceStateEnum	state;
 	@Embedded
-	private Collection<Question>	questions;
+	private Collection<Question>	questionList;
 	@Embedded
-	private Collection<Response>	responses;
+	private Collection<Response>	responseList;
 	private ExerciceTypeEnum	type;
 	/*
 	###############################
@@ -54,10 +54,10 @@ public class Exercice
 		return state;
 	}
 	public Collection<Question> getQuestions() {
-		return questions;
+		return questionList;
 	}
 	public Collection<Response> getResponses() {
-		return responses;
+		return responseList;
 	}
 	public ExerciceTypeEnum getType() {
 		return type;
@@ -83,10 +83,10 @@ public class Exercice
 		this.state = state;
 	}
 	public void setQuestions(Collection<Question> questions) {
-		this.questions = questions;
+		this.questionList = questions;
 	}
 	public void setResponses(Collection<Response> responses) {
-		this.responses = responses;
+		this.responseList = responses;
 	}
 	public void setType(ExerciceTypeEnum type) {
 		this.type = type;
