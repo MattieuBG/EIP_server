@@ -25,7 +25,7 @@ public class Homework
 	@Reference
 	private Module	module;
 	@Embedded
-	private List<Exercice> exercices;
+	private List<Exercice> exerciceList;
 	/*
 	###############################
 	#           Getter            #
@@ -47,7 +47,7 @@ public class Homework
 		return module;
 	}
 	public List<Exercice> getExercices() {
-		return exercices;
+		return exerciceList;
 	}
 	/*
 	###############################
@@ -70,7 +70,7 @@ public class Homework
 		this.module = module;
 	}
 	public void setExercices(List<Exercice> exercices) {
-		this.exercices = exercices;
+		this.exerciceList = exercices;
 	}
 	/*
 	###############################
