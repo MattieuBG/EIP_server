@@ -7,24 +7,33 @@ import com.mongodb.MongoClient;
 
 /**
  * holds our Morphia and Datastore instances
+ * 
  * @author Alex
  *
  */
-public class MorphiaService
-{ 
+
+public final class MorphiaService {
 	/*
-	###############################
-	#         Attributes          #
-	###############################
-	*/
+	 * ############################### # Attributes #
+	 * ###############################
+	 */
 	private Morphia morphia;
 	private Datastore datastore;
+
+	/** Holder */
+	private static class SingletonHolder {
+		private final static MorphiaService instance = new MorphiaService();
+	}
+
+	private static MorphiaService getInstance() {
+		return SingletonHolder.instance;
+	}
+
 	/*
-	###############################
-	#         Constructor         #
-	###############################
-	*/
-	public MorphiaService() {
+	 * ############################### # Constructor #
+	 * ###############################
+	 */
+	private MorphiaService() {
 
 		// we use MongoClient to connect the local host (127.0.0.1)
 		// (assuming this is where your mongodb instance is running)
@@ -36,28 +45,28 @@ public class MorphiaService
 		String databaseName = "eschoolBag";
 		this.datastore = morphia.createDatastore(mongoClient, databaseName);
 	}
+
 	/*
-	###############################
-	#           Getter            #
-	###############################
-	*/
-	public Morphia getMorphia() {
-		return morphia;
+	 * ############################### # Getter #
+	 * ###############################
+	 */
+	public static Morphia getMorphia() {
+		return getInstance().morphia;
 	}
 
-	public Datastore getDatastore() {
-		return datastore;
-	}
-	/*
-	###############################
-	#         Setter              #
-	###############################
-	*/
-	public void setDatastore(Datastore datastore) {
-		this.datastore = datastore;
+	public static Datastore getDatastore() {
+		return getInstance().datastore;
 	}
 
-	public void setMorphia(Morphia morphia) {
-		this.morphia = morphia;
+	/*
+	 * ############################### # Setter #
+	 * ###############################
+	 */
+	public static void setDatastore(Datastore datastore) {
+		getInstance().datastore = datastore;
+	}
+
+	public static void setMorphia(Morphia morphia) {
+		getInstance().morphia = morphia;
 	}
 }
