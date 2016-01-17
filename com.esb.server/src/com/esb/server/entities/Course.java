@@ -4,7 +4,7 @@ import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Reference;
 
 @Entity
-public class Cours extends AFile
+public class Course extends AFile
 {
 	/*
 	###############################

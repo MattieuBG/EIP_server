@@ -92,8 +92,8 @@
       <operations public="false" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="11" language="java" name="com.esb.server.entities.Cours" project="JacksonTest" 
-    file="/JacksonTest/src/com/esb/server/entities/Cours.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="11" language="java" name="com.esb.server.entities.Course" project="JacksonTest" 
+    file="/JacksonTest/src/com/esb/server/entities/Course.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="399" y="280"/>    
     <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      

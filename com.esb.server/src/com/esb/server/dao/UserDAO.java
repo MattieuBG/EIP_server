@@ -1,14 +1,13 @@
 package com.esb.server.dao;
 
 import org.bson.types.ObjectId;
-import com.esb.server.entities.Video;
-
 import org.mongodb.morphia.dao.BasicDAO;
 
+import com.esb.server.entities.User;
 import com.esb.server.morphia.MorphiaService;
 
-public class VideoDAO extends BasicDAO<Video, ObjectId> {
-	public VideoDAO() {
+public class UserDAO extends BasicDAO<User, ObjectId>{
+	public UserDAO() {
 		super(MorphiaService.getDatastore());
 	}
 }
