@@ -3,6 +3,7 @@ package com.esb.server.entities;
 import java.util.Collection;
 import java.util.Date;
 
+import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
@@ -20,7 +21,7 @@ public class Conversation
 	}
 	
 	@Id
-	private String id;
+	private ObjectId id;
 	private String title;
 	@Reference
 	private Collection<User> userList;
@@ -31,7 +32,7 @@ public class Conversation
 	#         Getter              #
 	###############################
 	*/
-	public String getId() {
+	public ObjectId getId() {
 		return id;
 	}
 	public String getTitle() {
@@ -51,7 +52,7 @@ public class Conversation
 	#         Setter              #
 	###############################
 	*/
-	public void setId(String id) {
+	public void setId(ObjectId id) {
 		this.id = id;
 	}
 	public void setTitle(String title) {

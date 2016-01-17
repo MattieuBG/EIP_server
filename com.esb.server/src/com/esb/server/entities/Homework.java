@@ -3,6 +3,7 @@ package com.esb.server.entities;
 import java.util.Date;
 import java.util.List;
 
+import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
@@ -17,7 +18,7 @@ public class Homework
 	###############################
 	*/
 	@Id
-	private Long	id;
+	private ObjectId	id;
 	private Date	toDoDate;
 	private Date	finishedDate;
 	@Reference
@@ -31,7 +32,7 @@ public class Homework
 	#           Getter            #
 	###############################
 	*/
-	public Long getId() {
+	public ObjectId getId() {
 		return id;
 	}
 	public Date getToDoDate() {
@@ -54,7 +55,7 @@ public class Homework
 	#         Setter              #
 	###############################
 	*/
-	public void setId(Long id) {
+	public void setId(ObjectId id) {
 		this.id = id;
 	}
 	public void setToDoDate(Date toDoDate) {

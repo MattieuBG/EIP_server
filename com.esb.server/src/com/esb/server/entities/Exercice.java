@@ -2,6 +2,7 @@ package com.esb.server.entities;
 
 import java.util.Collection;
 
+import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
@@ -22,7 +23,7 @@ public class Exercice
 		QCM, NORMAL
 	}
 	@Id
-	private String	id;
+	private ObjectId	id;
 	private String	title;
 	private String	description;
 	@Reference
@@ -38,7 +39,7 @@ public class Exercice
 	#           Getter            #
 	###############################
 	*/
-	public String getId() {
+	public ObjectId getId() {
 		return id;
 	}
 	public String getTitle() {
@@ -67,7 +68,7 @@ public class Exercice
 	#         Setter              #
 	###############################
 	*/
-	public void setId(String id) {
+	public void setId(ObjectId id) {
 		this.id = id;
 	}
 	public void setTitle(String title) {

@@ -2,6 +2,7 @@ package com.esb.server.entities;
 
 import java.util.Date;
 
+import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Id;
 
 public abstract class AFile
@@ -12,7 +13,7 @@ public abstract class AFile
 	###############################
 	*/
 	@Id
-	private String id;
+	private ObjectId id;
 	private String name;
 	private String path;
 	private String description;
@@ -24,7 +25,7 @@ public abstract class AFile
 	#         Getter              #
 	###############################
 	*/
-	public String getId() {
+	public ObjectId getId() {
 		return id;
 	}
 	public String getName() {
@@ -50,7 +51,7 @@ public abstract class AFile
 	#         Setter              #
 	###############################
 	*/
-	public void setId(String id) {
+	public void setId(ObjectId id) {
 		this.id = id;
 	}
 	public void setName(String name) {

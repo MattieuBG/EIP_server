@@ -1,5 +1,6 @@
 package com.esb.server.entities;
 
+import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Id;
 
 public abstract class AQuestionAndAnswer
@@ -10,7 +11,7 @@ public abstract class AQuestionAndAnswer
 	###############################
 	*/
 	@Id
-	private String	id;
+	private ObjectId	id;
 	private String	description;
 	private User user;
 	/*
@@ -18,7 +19,7 @@ public abstract class AQuestionAndAnswer
 	#           Getter            #
 	###############################
 	*/
-	public String getId() {
+	public ObjectId getId() {
 		return id;
 	}
 	public String getDescription() {
@@ -32,7 +33,7 @@ public abstract class AQuestionAndAnswer
 	#         Setter              #
 	###############################
 	*/
-	public void setId(String id) {
+	public void setId(ObjectId id) {
 		this.id = id;
 	}
 	public void setDescription(String description) {

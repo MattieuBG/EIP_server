@@ -1,4 +1,4 @@
-package jacksontest.rest;
+package com.esb.server.controllers;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -13,7 +13,7 @@ import javax.ws.rs.core.Response;
 import com.esb.server.entities.Image;
 
 @Path("/images")
-public class ImageService {
+public class ImageController {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

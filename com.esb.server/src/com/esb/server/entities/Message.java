@@ -2,6 +2,7 @@ package com.esb.server.entities;
 
 import java.util.Date;
 
+import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
@@ -15,7 +16,7 @@ public class Message
 	###############################
 	*/
 	@Id
-	private String id;
+	private ObjectId id;
 	private String contenu;
 	private Date creationDate;
 	private Date deletedDate;
@@ -28,7 +29,7 @@ public class Message
 	#         Getter              #
 	###############################
 	*/
-	public String getId() {
+	public ObjectId getId() {
 		return id;
 	}
 	public String getContenu() {
@@ -51,7 +52,7 @@ public class Message
 	#         Setter              #
 	###############################
 	*/
-	public void setId(String id) {
+	public void setId(ObjectId id) {
 		this.id = id;
 	}
 	public void setContenu(String contenu) {

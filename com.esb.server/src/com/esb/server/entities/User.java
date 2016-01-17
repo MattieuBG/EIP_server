@@ -2,6 +2,7 @@ package com.esb.server.entities;
 
 import java.util.Date;
 
+import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Embedded;
@@ -19,7 +20,7 @@ public class User
 	}
 
 	@Id
-	private String id;
+	private ObjectId id;
 	private Classe academicLevel;
 	private RoleEnum role;
 	private String email;
@@ -36,7 +37,7 @@ public class User
 	#         Getter              #
 	###############################
 	*/
-	public String getId() {
+	public ObjectId getId() {
 		return id;
 	}
 	public Classe getNiveauScolaire() {
@@ -74,7 +75,7 @@ public class User
 	#         Setter              #
 	###############################
 	*/
-	public void setId(String id) {
+	public void setId(ObjectId id) {
 		this.id = id;
 	}
 	public void setNiveauScolaire(Classe niveauScolaire) {
