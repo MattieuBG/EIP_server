@@ -10,28 +10,28 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.esb.server.entities.Image;
+import com.esb.server.entities.Course;
 
-@Path("/images")
-public class ImageController {
+@Path("/Courses")
+public class CourseController {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Image get() {
-		Image item = new Image();
+	public Course get() {
+		Course item = new Course();
 		return item;
 	}
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response create(Image item) {
+	public Response create(Course item) {
 		// do CREATE on database
 		return Response.status(201).build();
 	}
 	
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response update(Image item)
+	public Response update(Course item)
 	{
 		// do UPDATE on database
 		return Response.status(201).build();
@@ -39,7 +39,7 @@ public class ImageController {
 
 	@DELETE
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response delete(Image item)
+	public Response delete(Course item)
 	{
 		// do DELETE on database
 		return Response.status(201).build();
