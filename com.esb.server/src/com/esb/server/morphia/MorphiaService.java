@@ -14,8 +14,9 @@ import com.mongodb.MongoClient;
 
 public final class MorphiaService {
 	/*
-	 * ############################### # Attributes #
-	 * ###############################
+	 * ##############
+	 * # Attributes #
+	 * ##############
 	 */
 	private Morphia morphia;
 	private Datastore datastore;
@@ -30,8 +31,9 @@ public final class MorphiaService {
 	}
 
 	/*
-	 * ############################### # Constructor #
-	 * ###############################
+	 * ###############
+	 * # Constructor #
+	 * ###############
 	 */
 	private MorphiaService() {
 
@@ -47,8 +49,9 @@ public final class MorphiaService {
 	}
 
 	/*
-	 * ############################### # Getter #
-	 * ###############################
+	 * ###########
+	 * # Getter #
+	 * ###########
 	 */
 	public static Morphia getMorphia() {
 		return getInstance().morphia;
@@ -59,8 +62,9 @@ public final class MorphiaService {
 	}
 
 	/*
-	 * ############################### # Setter #
-	 * ###############################
+	 * ###########
+	 * # Setter #
+	 * ###########
 	 */
 	public static void setDatastore(Datastore datastore) {
 		getInstance().datastore = datastore;
