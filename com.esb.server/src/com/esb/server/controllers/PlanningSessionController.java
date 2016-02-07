@@ -1,5 +1,7 @@
 package com.esb.server.controllers;
 
+import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -21,21 +23,15 @@ public class PlanningSessionController {
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public PlanningSession get() {
-
-		PlanningSession item = new PlanningSession();
-		return item;
+	public List<PlanningSession> get() {		
+		return dao.find().asList();
 	}
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response create(PlanningSession item) {
-		
-		// do CREATE on database
 		dao.save(item);
-		
-		return Response.ok("C EST OK !!!!!!").build();
-		//return Response.serverError().build();
+		return Response.ok().build();
 	}
 	
 	@PUT

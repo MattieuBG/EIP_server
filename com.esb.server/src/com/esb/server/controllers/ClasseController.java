@@ -1,5 +1,7 @@
 package com.esb.server.controllers;
 
+import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -10,23 +12,26 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.esb.server.dao.ClasseDAO;
+import com.esb.server.dao.PlanningSessionDAO;
 import com.esb.sharedlibrary.entities.Classe;
 
 @Path("/classes")
 public class ClasseController {
 
+	private ClasseDAO dao = new ClasseDAO();
+	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Classe get() {
-		Classe item = new Classe();
-		return item;
+	public List<Classe> get() {
+		return dao.find().asList();
 	}
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response create(Classe item) {
-		// do CREATE on database
-		return Response.status(201).build();
+		dao.save(item);
+		return Response.ok().build();
 	}
 	
 	@PUT

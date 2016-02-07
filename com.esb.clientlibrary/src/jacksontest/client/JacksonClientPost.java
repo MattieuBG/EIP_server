@@ -15,15 +15,17 @@ public class JacksonClientPost {
 		Classe classe = new Classe();
 		User prof = new User();
 
-		classe.setSupervisor(prof);
-		classe.setTitle("Francais");
-
 		prof.setEmail("gustave.latouche@prof.com");
 		prof.setLogin("latouc_g");
 		prof.setRole(RoleEnum.PROF);
 		prof.setPassword("password");
 		prof.setFirstName("Gustave");
 		prof.setLastName("Latouche");
+		ESBClient.sendObject("users", prof);
+
+		classe.setSupervisor(prof);
+		classe.setTitle("Francais");
+		ESBClient.sendObject("classes", classe);
 
 		planning.setClasse(classe);
 		planning.setProf(prof);
@@ -31,8 +33,6 @@ public class JacksonClientPost {
 		planning.setFin(LocalDateTime.now());
 		planning.setName("session de test");
 		planning.setSalle("SM 42");
-
-		System.out.println(" REPONSE : "
-				+ ESBClient.sendObject("plannings", planning));
+		ESBClient.sendObject("plannings", planning);
 	}
 }
