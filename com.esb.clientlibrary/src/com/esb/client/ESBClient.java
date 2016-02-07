@@ -7,13 +7,13 @@ import com.sun.jersey.api.client.WebResource;
 
 public final class ESBClient {
 
-	private static String baseUrl = "http://localhost:8080/com.esb.server/rest/json/";
+	private static String baseUrl = "http://localhost:8080/com.esb.server/api/";
 
 	private ESBClient() {
 	}
 
 	static public <T> T getObject(String appName, Class<T> ctype) {
-		String url = baseUrl + appName + "/get";
+		String url = baseUrl + appName;
 		T res = null;
 		try {
 
@@ -38,7 +38,8 @@ public final class ESBClient {
 
 	static public String sendObject(String appName, Object obj) {
 		String output = new String();
-		String url = baseUrl + appName + "/post";
+//		String url = baseUrl + appName + "/post";
+		String url = baseUrl + appName ;
 		try {
 			Client client = Client.create();
 			WebResource webResource = client.resource(url);
@@ -49,7 +50,7 @@ public final class ESBClient {
 			ClientResponse response = webResource.type("application/json")
 					.post(ClientResponse.class, input);
 
-			if (response.getStatus() != 201) {
+			if (response.getStatus() != 200) {
 				throw new RuntimeException("Failed : HTTP error code : "
 						+ response.getStatus());
 			}

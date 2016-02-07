@@ -3,6 +3,7 @@
 	<name>com.esb.server</name>
 	<comment></comment>
 	<projects>
+		<project>com.esb.sharedlibrary</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

@@ -10,9 +10,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.esb.server.entities.Audio;
+import com.esb.sharedlibrary.entities.Audio;
 
-@Path("/Audios")
+@Path("/audios")
 public class AudioController {
 
 	@GET

@@ -2,9 +2,10 @@ package com.esb.sharedlibrary.json;
 
 import java.io.IOException;
 
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 public final class JSONConvertor {
 
@@ -20,6 +21,7 @@ public final class JSONConvertor {
 
 		try {
 			ObjectMapper mapper = new ObjectMapper();
+			//mapper.registerModule(new JavaTimeModule());
 			res = mapper.writeValueAsString(obj);
 
 			System.out.println("JSONConvertor.toJSON : " + res);
@@ -43,6 +45,7 @@ public final class JSONConvertor {
 
 		try {
 			ObjectMapper mapper = new ObjectMapper();
+			//mapper.registerModule(new JavaTimeModule());
 			res = mapper.readValue(str, ctype);
 
 			System.out.println("JSONConvertor.toObject : " + res.toString());

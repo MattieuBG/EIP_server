@@ -3,6 +3,7 @@ package com.esb.server.morphia;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 
+import com.esb.sharedlibrary.json.LocalDateTimeConverter;
 import com.mongodb.MongoClient;
 
 /**
@@ -38,12 +39,14 @@ public final class MorphiaService {
 		// we use MongoClient to connect the local host (127.0.0.1)
 		// (assuming this is where your mongodb instance is running)
 		// on port 27017 (the default port)
-		MongoClient mongoClient = new MongoClient("xxx.x.x.x:xxxx");
+		MongoClient mongoClient = new MongoClient();
 
 		// create a new morphia instance
 		this.morphia = new Morphia();
-		String databaseName = "eschoolBag";
+		String databaseName = "eschoolbag";
 		this.datastore = morphia.createDatastore(mongoClient, databaseName);
+		
+		morphia.getMapper().getConverters().addConverter(new LocalDateTimeConverter());
 	}
 
 	/*

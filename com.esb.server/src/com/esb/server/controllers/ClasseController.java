@@ -10,9 +10,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.esb.server.entities.Classe;
+import com.esb.sharedlibrary.entities.Classe;
 
-@Path("/Classes")
+@Path("/classes")
 public class ClasseController {
 
 	@GET

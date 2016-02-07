@@ -10,7 +10,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.esb.server.entities.Video;
+import com.esb.sharedlibrary.entities.Video;
 
 @Path("/videos")
 public class VideoController {

@@ -10,9 +10,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.esb.server.entities.Message;
+import com.esb.sharedlibrary.entities.Message;
 
-@Path("/Messages")
+@Path("/messages")
 public class MessageController {
 
 	@GET

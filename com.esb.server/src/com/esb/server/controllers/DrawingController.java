@@ -10,9 +10,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.esb.server.entities.Drawing;
+import com.esb.sharedlibrary.entities.Drawing;
 
-@Path("/Drawings")
+@Path("/drawings")
 public class DrawingController {
 
 	@GET
