@@ -13,7 +13,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.esb.server.dao.ClasseDAO;
-import com.esb.server.dao.PlanningSessionDAO;
 import com.esb.sharedlibrary.entities.Classe;
 
 @Path("/classes")
