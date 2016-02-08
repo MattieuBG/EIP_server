@@ -21,7 +21,13 @@ public class UserController {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<User> get() {
-		return dao.find().asList();
+		User  item = dao.find();
+		
+		if (item){
+			List<User> itemList = item.asList();
+			return itemList;
+		}
+		return null;
 	}
 
 	@POST

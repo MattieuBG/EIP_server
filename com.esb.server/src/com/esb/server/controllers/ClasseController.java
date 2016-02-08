@@ -23,7 +23,13 @@ public class ClasseController {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Classe> get() {
-		return dao.find().asList();
+		Classe  item = dao.find();
+		
+		if (item){
+			List<Classe> itemList = item.asList();
+			return itemList;
+		}
+		return null;
 	}
 
 	@POST

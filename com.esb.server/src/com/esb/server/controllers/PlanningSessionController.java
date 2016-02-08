@@ -23,15 +23,21 @@ public class PlanningSessionController {
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<PlanningSession> get() {		
-		return dao.find().asList();
+	public List<PlanningSession> get() {
+		PlanningSession  item = dao.find();
+		
+		if (item){
+			List<PlanningSession> itemList = item.asList();
+			return itemList;
+		}
+		return null;
 	}
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response create(PlanningSession item) {
 		dao.save(item);
-		return Response.ok().build();
+		return Response.ok().build();	
 	}
 	
 	@PUT
