@@ -8,9 +8,9 @@ import com.mongodb.MongoClient;
 public final class MorphiaHelper {
 	private Morphia morphia;
 	private Datastore datastore;
-	//private static String url = "localhost";
+	private static String url = "localhost";
 	//private static String url = "mongo";
-	private static String url = "51.254.99.218";
+	//private static String url = "51.254.99.218";
 
 
 	/** Holder */
