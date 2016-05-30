@@ -1,63 +1,75 @@
 package com.esb.server.endpoints.media;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.esb.server.dao.media.ImageDAO;
-import com.esb.server.services.media.ImageService;
 import com.esb.server.entities.media.Image;
 import com.esb.server.helpers.DAOHelper;
+import com.esb.server.services.media.ImageService;
 
 import java.util.List;
 
 @Path("images")
 public class ImageController {
 
-	private ImageDAO dao = new ImageDAO();
 	private ImageService service = new ImageService();
 
+	/**
+	 * The method will return you all images store in database
+	 * @return List of Image (List<Image>)
+     */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Image> get() {
 		return DAOHelper.imageDAO.find().asList();
 	}
 
-    // TODO Get une image en particulier via son ID
-   /*
+	/**
+	 * This method will retrun you the image corresponding to the id given
+	 * @return One Image
+	 */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("id/{id}")
     public Image getById(@PathParam("id") String id) {
         return DAOHelper.imageDAO.createQuery().filter("id =", id).get();
-    }*/
+    }
 
+	/**
+	 * This method will create entry in Imqge collection and multiples entries
+	 * in Image.chunks and Image.files.
+	 * Both are linked by and id (GidFS id is store in Image Collection)
+	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response create(Image item) {
-        service.saveImage(item);
-		return Response.status(201).build();
-	}
-	
-	@PUT
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response update(Image item)
-	{
-		service.updateImage(item);
+	public Response create(Image entity) {
+        System.out.println("Image = "+entity);
+        DAOHelper.imageDAO.save(entity);
 		return Response.status(201).build();
 	}
 
+	/**
+	 * This method will upade entry in Imqge collection and remove entries
+	 * in Image.chunks and Image.files to recreate them GridFS API haven't
+	 * manage this kind of function.
+	 */
+	@PUT
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response update(Image entity) {
+		service.updateImage(entity);
+		return Response.status(201).build();
+	}
+
+	/**
+	 * This method will delete entry in Imqge collection and entries
+	 * in Image.chunks and Image.files. In this case GridFS does the work
+	 * by herself.
+	 */
 	@DELETE
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response delete(Image item)
-	{
-		service.deleteImage(item);
+	public Response delete(Image entity) {
+		service.deleteImage(entity);
 		return Response.status(201).build();
 	}
 }

@@ -1,15 +1,15 @@
 package com.esb.server;
 
 import com.esb.server.dao.media.ImageDAO;
-import com.esb.server.services.media.ImageService;
 import com.esb.server.entities.media.Image;
 
+import com.esb.server.services.media.ImageService;
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
 
 import java.io.File;
 import java.rmi.UnknownHostException;
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -59,8 +59,8 @@ public class MongoTests {
         ImageDAO imageDAO = new ImageDAO();
 
         image.setName("Foobar");
-        image.setCreationDate(LocalDateTime.now());
-        image.setModifiedDate(LocalDateTime.now());
+        image.setCreationDate(new Date());
+        image.setModifiedDate(new Date());
 
         imageDAO.save(image);
     }
@@ -72,13 +72,13 @@ public class MongoTests {
     {
         Image image = new Image();
         ImageService imgService = new ImageService();
-        File imageFile = new File("/home/alex/Project/EIP/newarchi/Serveur/server/src/main/java/com/esb/server/DSC_0779.NEF");
+        File imageFile = new File("/home/alex/Project/EIP/CurrentVersion/Serveur/server/src/main/java/com/esb/server/DSC_0779.NEF");
 
         image.setName("Foobar");
         image.setBinary(imageFile);
         image.setDescription("Awesome Picture !");
-        image.setCreationDate(LocalDateTime.now());
-        image.setModifiedDate(LocalDateTime.now());
+        image.setCreationDate(new Date());
+        image.setModifiedDate(new Date());
 
         imgService.saveImage(image);
     }

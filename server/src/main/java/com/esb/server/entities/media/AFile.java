@@ -1,7 +1,7 @@
 package com.esb.server.entities.media;
 
 import java.io.File;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
@@ -23,9 +23,9 @@ public abstract class AFile
 	@Transient
 	private File binary;
 	private String description;
-	private LocalDateTime creationDate;
-	private LocalDateTime modifiedDate;
-	private LocalDateTime deletedDate;
+	private Date creationDate;
+	private Date modifiedDate;
+	private Date deletedDate;
 	/*
 	###############################
 	#         Getter              #
@@ -46,13 +46,13 @@ public abstract class AFile
 	public String getDescription() {
 		return description;
 	}
-	public LocalDateTime getCreationDate() {
+	public Date getCreationDate() {
 		return creationDate;
 	}
-	public LocalDateTime getModifiedDate() {
+	public Date getModifiedDate() {
 		return modifiedDate;
 	}
-	public LocalDateTime getDeletedDate() {
+	public Date getDeletedDate() {
 		return deletedDate;
 	}
 	/*
@@ -72,13 +72,13 @@ public abstract class AFile
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public void setCreationDate(LocalDateTime creationDate) {
+	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
 	}
-	public void setModifiedDate(LocalDateTime lastModified) {
+	public void setModifiedDate(Date lastModified) {
 		this.modifiedDate = lastModified;
 	}
-	public void setDeletedDate(LocalDateTime deleted) {
+	public void setDeletedDate(Date deleted) {
 		this.deletedDate = deleted;
 	}
 	public void setIdGridFs(String idGridFs) {
@@ -98,7 +98,6 @@ public abstract class AFile
 					", name : "+this.getName()+
 					", binary : "+this.getBinary()+
 					", description : "+this.getDescription()+
-					", binary : "+this.getBinary()+
 					", create : "+this.getCreationDate()+
 					", lastUpdate : "+this.getModifiedDate()+
 					", deleted : "+this.getDeletedDate()+
