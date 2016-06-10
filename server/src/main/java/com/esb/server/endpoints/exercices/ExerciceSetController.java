@@ -31,7 +31,7 @@ public class ExerciceSetController {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("id/{id}")
+	@Path("{id}")
 	public ExerciceSet getById(@PathParam("id") String id) {
 		return DAOHelper.exerciceSetDAO.createQuery().filter("id =", id).get();
 	}

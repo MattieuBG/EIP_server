@@ -18,10 +18,11 @@ import com.esb.server.entities.management.User;
 import com.esb.server.entities.management.User.EUserRole;
 import com.esb.server.helpers.DAOHelper;
 
-@Path("tests")
-public class TestController {
+@Path("populate")
+public class PopulateController {
 
 	@GET
+	@Path("generate")
 	public Response runTests() {
 		createProfs();
 		createStudents();

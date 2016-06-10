@@ -29,7 +29,7 @@ public class ModuleTemplateController {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("id/{id}")
+	@Path("{id}")
 	public ModuleTemplate getById(@PathParam("id") String id) {
 		return DAOHelper.moduleTemplateDAO.createQuery().filter("id =", id).get();
 	}

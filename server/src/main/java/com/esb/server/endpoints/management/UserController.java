@@ -34,7 +34,7 @@ public class UserController {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("id/{id}")
+	@Path("{id}")
 	public User getById(@PathParam("id") String id) {
 		return DAOHelper.userDAO.createQuery().filter("id =", id).get();
 	}

@@ -28,7 +28,7 @@ public class ModuleController {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("id/{id}")
+	@Path("{id}")
 	public Module getById(@PathParam("id") String id) {
 		return DAOHelper.moduleDAO.createQuery().filter("id =", id).get();
 	}

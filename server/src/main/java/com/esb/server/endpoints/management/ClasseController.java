@@ -29,7 +29,7 @@ public class ClasseController {
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("id/{id}")
+	@Path("{id}")
 	public Classe getById(@PathParam("id") String id) {
 		return DAOHelper.classeDAO.createQuery().filter("id =", id).get();
 	}

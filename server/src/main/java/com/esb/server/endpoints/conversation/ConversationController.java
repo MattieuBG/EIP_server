@@ -28,7 +28,7 @@ public class ConversationController {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("id/{id}")
+	@Path("{id}")
 	public Conversation getById(@PathParam("id") String id) {
 		return DAOHelper.conversationDAO.createQuery().filter("id =", id).get();
 	}
