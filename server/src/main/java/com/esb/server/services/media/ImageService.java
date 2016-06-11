@@ -38,14 +38,12 @@ public class ImageService {
         GridFS gridFSImage = new GridFS(this.db, "Image");
         GridFSInputFile gfsFile = null; // take the input stream coming the file we uploaded via our HTML page
 
-        logger.debug("TEST");
-
         try {
             /* create the file (the multiple chunks) from the binary of the image we wanted to save */
             gfsFile = gridFSImage.createFile(imageToSave.getBinary());
         } catch (IOException e) {
+            logger.error(e.toString());
             e.printStackTrace();
-            // TODO Create log
         }
         /* Set the name of image in metadata Entity of GridFS named entityName.files */
         gfsFile.setFilename(imageToSave.getName());
@@ -91,7 +89,7 @@ public class ImageService {
             gfsFile = gridFSImage.createFile(imageToUpdate.getBinary());
         } catch (IOException e) {
             e.printStackTrace();
-            // TODO Logs
+            logger.error(e.toString());
         }
         /* As there is no update method with GridFS we delete and remake record
            So here we reset the previous name */
@@ -120,7 +118,7 @@ public class ImageService {
             entryToGet.writeTo(binaryOfImage);
         } catch (IOException e) {
             e.printStackTrace();
-            // TODO Logs
+            logger.error(e.toString());
         }
         imageToGet.setBinary(binaryOfImage);
         return (imageToGet);
