@@ -11,6 +11,8 @@ import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSInputFile;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,56 +24,27 @@ import java.util.Date;
  */
 public class GridFSTest {
 
+    final static Logger logger = LoggerFactory.getLogger(ImageService.class);
+
     private static ImageDAO dao    = new ImageDAO();
 
     public static void main(String[] args) throws IOException {
-/*        System.out.println("Fill :");
-        FillMongoWithBigFile();
 
-        System.out.println("Get image :");
-        getImage();*/
 
         ImageService service = new ImageService();
-        Image nef = new Image();
-        nef.setName("nef_img");
-        nef.setCreationDate(new Date());
-        nef.setModifiedDate(new Date());
-        File imageFile = new File("/home/alex/Project/EIP/CurrentVersion/Serveur/server/src/main/java/com/esb/server/DSC_0779.NEF");
-        nef.setBinary(imageFile); // Generation du binaire en plusieurs chunks via GridFS
+
+        Image nef = createImage();
 
         service.saveImage(nef);
 
-        /*service.getAllImage();*/
+        service.getAllImage();
 
-       /* nef.setName("nef_img");
-        nef.setCreationDate(new Date());
-        nef.setModifiedDate(new Date());
-        File imageFile = new File("/home/alex/Project/EIP/CurrentVersion/Serveur/server/src/main/java/com/esb/server/DSC_0779.NEF");
-        nef.setBinary(imageFile); // Generation du binaire en plusieurs chunks via GridFS
-
-        System.out.println("Save :");
-        service.saveImage(nef);
-
-        System.out.println("Get image :");
-        service.getImage(nef);
-
-        System.out.println("update image :");
         service.updateImage(nef);
 
-        System.out.println("Get image :");
-        service.getImage(nef);*/
-/*
-        System.out.println("Get :");
-        getImageServiceTest();
+        logger.debug("nef updated ...");
 
-       System.out.println("Delete :");
-        deleteImageServiceTest();
+        service.deleteImage(nef);
 
-        System.out.println("Get :");
-        getImageServiceTest();
-
-        System.out.println("Update :");
-        updateImageServiceTest();*/
     }
 
     /**
@@ -95,15 +68,14 @@ public class GridFSTest {
     /**
      * Get data from GridFS collection
      */
-    private static void getImage() {
-        Mongo mongo = new Mongo("localhost", 27017);
-        DB db = mongo.getDB("eschoolbag");
-
-        String newFileName = "mkyong-java-image";
-        GridFS gfsPhoto = new GridFS(db, "Image");
-        GridFSDBFile imageForOutput = gfsPhoto.findOne(newFileName);
-        System.out.println(imageForOutput);
-        mongo.close();
+    private static Image createImage() {
+        Image nef = new Image();
+        nef.setName("nef_img");
+        nef.setCreationDate(new Date());
+        nef.setModifiedDate(new Date());
+        File imageFile = new File("/home/alex/Project/EIP/CurrentVersion/Serveur/server/src/main/java/com/esb/server/DSC_0779.NEF");
+        nef.setBinary(imageFile);
+        return nef;
     }
 
     /**

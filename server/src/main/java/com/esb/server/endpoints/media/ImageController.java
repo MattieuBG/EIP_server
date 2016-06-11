@@ -7,12 +7,15 @@ import javax.ws.rs.core.Response;
 import com.esb.server.entities.media.Image;
 import com.esb.server.helpers.DAOHelper;
 import com.esb.server.services.media.ImageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 @Path("images")
 public class ImageController {
 
+	final static Logger logger = LoggerFactory.getLogger(ImageController.class);
 	private ImageService service = new ImageService();
 
 	/**
@@ -44,8 +47,9 @@ public class ImageController {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response create(Image entity) {
-        System.out.println("Image = "+entity);
-        DAOHelper.imageDAO.save(entity);
+        logger.debug("Image = "+entity);
+        service.saveImage(entity);
+        //DAOHelper.imageDAO.save(entity);
 		return Response.status(201).build();
 	}
 
