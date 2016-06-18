@@ -37,6 +37,7 @@ public class AFileService {
 
         try {
             /* create the file (the multiple chunks) from the binary of the image we wanted to save */
+            //gfsFile = gridFSImage.createFile(fileToSave.getBinary());
             gfsFile = gridFSImage.createFile(fileToSave.getBinary());
         } catch (IOException e) {
             logger.error(e.toString());

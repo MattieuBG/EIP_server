@@ -72,8 +72,11 @@ public abstract class AFile
 	public void setBinary(File binary) {
 		this.binary = binary;
 	}
-	public void setBinary(String data) {
+	public void setData(String data) {
 		this.data = data;
+	}
+	public String getData() {
+		return (this.data);
 	}
 	public void setDescription(String description) {
 		this.description = description;
