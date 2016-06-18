@@ -12,6 +12,7 @@ import com.esb.server.dao.media.ImageDAO;
 import com.esb.server.dao.media.VideoDAO;
 import com.esb.server.dao.media.AudioDAO;
 import com.esb.server.dao.media.DrawingDAO;
+import com.esb.server.dao.media.AFileDAO;
 
 public class DAOHelper {
 	public static ConversationDAO conversationDAO = new ConversationDAO();
@@ -25,6 +26,7 @@ public class DAOHelper {
 	public static ModuleTemplateDAO moduleTemplateDAO = new ModuleTemplateDAO();
 	public static UserDAO userDAO = new UserDAO();
 
+	public static AFileDAO aFileDAO = new AFileDAO();
     public static ImageDAO imageDAO = new ImageDAO();
     public static VideoDAO videoDAO = new VideoDAO();
     public static AudioDAO audioDAO = new AudioDAO();

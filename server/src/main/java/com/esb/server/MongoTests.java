@@ -26,14 +26,12 @@ public class MongoTests {
         System.out.println("Test Input in eschoolbag database");
         InputTest();
         System.out.println("Test Input, via service, in eschoolbag database");
-        InputTestService();
     }
 
     /**
      * Test you can reach mongo AND eschoolbag is present in localhost
      */
-    private static void ConnectionTest()
-    {
+    private static void ConnectionTest() {
         MongoClient mongoClient = new MongoClient("localhost", 27017);
         List<String> databases = mongoClient.getDatabaseNames();
 
@@ -53,8 +51,7 @@ public class MongoTests {
     /**
      * Test if you can create an entry in database with DAO
      */
-    private static void InputTest()
-    {
+    private static void InputTest() {
         Image image = new Image();
         ImageDAO imageDAO = new ImageDAO();
 
@@ -64,23 +61,4 @@ public class MongoTests {
 
         imageDAO.save(image);
     }
-
-    /**
-     * Test if you can create an entry in database with Service
-     */
-    private static void InputTestService()
-    {
-        Image image = new Image();
-        ImageService imgService = new ImageService();
-        File imageFile = new File("/home/alex/Project/EIP/CurrentVersion/Serveur/server/src/main/java/com/esb/server/DSC_0779.NEF");
-
-        image.setName("Foobar");
-        image.setBinary(imageFile);
-        image.setDescription("Awesome Picture !");
-        image.setCreationDate(new Date());
-        image.setModifiedDate(new Date());
-
-        imgService.saveImage(image);
-    }
 }
-
