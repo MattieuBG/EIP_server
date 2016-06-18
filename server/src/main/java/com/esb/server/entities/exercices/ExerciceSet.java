@@ -9,16 +9,15 @@ import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Reference;
 
 @Entity
 public class ExerciceSet {
-	public static enum EExerciceSetType {
-		HOMEWORK, EXAM
-	}
 
 	@Id
 	public String id = ObjectId.get().toString();
-	public EExerciceSetType type;
+	@Reference
+	public ExerciceSetTemplate template;
 	@Embedded
 	public Notation notation;
 	@Embedded
@@ -26,6 +25,7 @@ public class ExerciceSet {
 
 	public ExerciceSet() {
 		answers = Maps.newHashMap();
+		notation = new Notation();
 	}
 
 }

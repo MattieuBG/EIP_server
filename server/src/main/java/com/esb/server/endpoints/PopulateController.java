@@ -8,6 +8,7 @@ import javax.ws.rs.core.Response;
 
 import jersey.repackaged.com.google.common.collect.Lists;
 
+import com.esb.server.annotations.Authenticated;
 import com.esb.server.entities.conversation.Conversation;
 import com.esb.server.entities.exercices.Exercice;
 import com.esb.server.entities.exercices.Question;
@@ -22,7 +23,6 @@ import com.esb.server.helpers.DAOHelper;
 public class PopulateController {
 
 	@GET
-	@Path("generate")
 	public Response runTests() {
 		createProfs();
 		createStudents();
@@ -300,5 +300,13 @@ public class PopulateController {
 
 	private void assignModulesToStudents() {
 		
+	}
+
+	@Authenticated
+	@Path("auth")
+	@GET
+	public Response auth()
+	{
+		return Response.status(201).entity("Ok").build(); 
 	}
 }

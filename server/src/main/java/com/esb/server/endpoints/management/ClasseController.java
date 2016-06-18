@@ -13,6 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import com.esb.server.entities.management.Classe;
 import com.esb.server.entities.management.User;
@@ -21,46 +22,59 @@ import com.esb.server.helpers.DAOHelper;
 @Path("classes")
 public class ClasseController {
 
+	// all classes
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Classe> get() {
 		return DAOHelper.classeDAO.find().asList();
 	}
-	
+
+	// by id
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("{id}")
-	public Classe getById(@PathParam("id") String id) {
-		return DAOHelper.classeDAO.createQuery().filter("id =", id).get();
+	public Classe getById(@PathParam("id") final String id) {
+		final Classe classe = DAOHelper.classeDAO.createQuery()
+				.filter("id =", id).get();
+		if (classe == null)
+			throw new WebApplicationException(Response
+					.status(Response.Status.BAD_REQUEST).entity(id).build());
+		return classe;
 	}
-	
+
+	// by user
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("user/{id}")
-	public List<Classe> getBySupervisor(@PathParam("id") String id) {
-		User user = DAOHelper.userDAO.createQuery().filter("id =", id).get();
-		if (user == null) throw new WebApplicationException(404);
-		return DAOHelper.classeDAO.createQuery().filter("supervisor =", user).asList();
+	public List<Classe> getBySupervisor(@PathParam("id") final String id) {
+		final User user = DAOHelper.userDAO.createQuery().filter("id =", id)
+				.get();
+		if (user == null)
+			throw new WebApplicationException(Response
+					.status(Response.Status.BAD_REQUEST)
+					.entity("Unknown user " + id).build());
+		return DAOHelper.classeDAO.createQuery().filter("supervisor =", user)
+				.asList();
 	}
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response create(Classe entity) {
+	public Response create(final Classe entity) {
 		DAOHelper.classeDAO.save(entity);
-		return Response.status(201).build();
+		return Response.status(Status.CREATED).build();
 	}
 
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response update(Classe entity) {
+	public Response update(final Classe entity) {
 		DAOHelper.classeDAO.save(entity);
-		return Response.status(201).build();
+		return Response.status(Status.OK).build();
 	}
 
 	@DELETE
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response delete(Classe entity) {
+	public Response delete(final Classe entity) {
 		DAOHelper.classeDAO.delete(entity);
-		return Response.status(201).build();
+		return Response.status(Status.OK).build();
 	}
 }

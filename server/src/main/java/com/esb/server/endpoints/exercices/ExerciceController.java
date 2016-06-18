@@ -25,24 +25,31 @@ public class ExerciceController {
 		return DAOHelper.exerciceDAO.find().asList();
 	}
 
+//	@GET
+//	@Produces(MediaType.APPLICATION_JSON)
+//	@Path("{id}")
+//	public List<Exercice> getById() {
+//		Exercice ex = DAOHelper.exerciceDAO.find().asList();
+//	}
+
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response create(Exercice entity) {
 		DAOHelper.exerciceDAO.save(entity);
-		return Response.status(Response.Status.CREATED).build();
+		return Response.status(201).build();
 	}
 
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response update(Exercice entity) {
 		DAOHelper.exerciceDAO.save(entity);
-		return Response.status(Response.Status.OK).build();
+		return Response.status(201).build();
 	}
 
 	@DELETE
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response delete(Exercice entity) {
 		DAOHelper.exerciceDAO.delete(entity);
-		return Response.status(Response.Status.OK).build();
+		return Response.status(201).build();
 	}
 }

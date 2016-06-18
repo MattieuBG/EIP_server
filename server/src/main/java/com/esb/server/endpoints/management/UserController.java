@@ -10,12 +10,14 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import org.mongodb.morphia.Key;
+import javax.ws.rs.core.Response.Status;
 
 import jersey.repackaged.com.google.common.collect.Lists;
+
+import org.mongodb.morphia.Key;
 
 import com.esb.server.entities.exercices.ExerciceSetTemplate;
 import com.esb.server.entities.management.Module;
@@ -26,6 +28,7 @@ import com.esb.server.helpers.DAOHelper;
 @Path("users")
 public class UserController {
 
+	// @Authenticated
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<User> get() {
@@ -35,22 +38,23 @@ public class UserController {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("{id}")
-	public User getById(@PathParam("id") String id) {
-		return DAOHelper.userDAO.createQuery().filter("id =", id).get();
+	public User getById(@PathParam("id") final String id) {
+		final User user = DAOHelper.userDAO.createQuery().filter("id =", id).get();
+		if (user == null)
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(id).build());
+		return user;
 	}
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("module/{id}")
-	public List<User> getByModuleId(@PathParam("id") String id) {
-		ModuleTemplate template = DAOHelper.moduleTemplateDAO.createQuery()
-				.filter("id =", id).get();
+	public List<User> getByModuleId(@PathParam("id") final String id) {
+		final ModuleTemplate template = DAOHelper.moduleTemplateDAO.createQuery().filter("id =", id).get();
 		if (template == null)
 			return null;
-		List<Module> mods = DAOHelper.moduleDAO.createQuery()
-				.filter("template =", template).asList();
-		List<User> users = Lists.newArrayList();
-		for (Module mod : mods) {
+		final List<Module> mods = DAOHelper.moduleDAO.createQuery().filter("template =", template).asList();
+		final List<User> users = Lists.newArrayList();
+		for (final Module mod : mods) {
 			users.add(mod.user);
 		}
 		return users;
@@ -59,18 +63,17 @@ public class UserController {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("exerciceset/{id} | examen/{id} | homeworks/{id}")
-	public List<User> getBySetId(@PathParam("id") String id) {
-		ExerciceSetTemplate template = DAOHelper.exerciceSetTemplateDAO
-				.createQuery().filter("id =", id).get();
+	public List<User> getBySetId(@PathParam("id") final String id) {
+		final ExerciceSetTemplate template = DAOHelper.exerciceSetTemplateDAO.createQuery().filter("id =", id).get();
 		if (template == null)
 			return null;
 
-		List<Key<ModuleTemplate>> modTemplates = DAOHelper.moduleTemplateDAO
-				.createQuery().filter("exerciceSets in", template).asKeyList();
+		final List<Key<ModuleTemplate>> modTemplates = DAOHelper.moduleTemplateDAO.createQuery().filter("exerciceSets in", template)
+				.asKeyList();
 
-		List<Module> mods = DAOHelper.moduleDAO.createQuery().filter("template in", modTemplates).asList();
-		List<User> users = Lists.newArrayList();
-		for (Module mod : mods) {
+		final List<Module> mods = DAOHelper.moduleDAO.createQuery().filter("template in", modTemplates).asList();
+		final List<User> users = Lists.newArrayList();
+		for (final Module mod : mods) {
 			users.add(mod.user);
 		}
 		return users;
@@ -78,23 +81,23 @@ public class UserController {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response create(User entity) {
+	public Response create(final User entity) {
 		DAOHelper.userDAO.save(entity);
-		return Response.status(201).build();
+		return Response.status(Status.CREATED).build();
 	}
 
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response update(User entity) {
+	public Response update(final User entity) {
 		DAOHelper.userDAO.save(entity);
-		return Response.status(201).build();
+		return Response.status(Status.OK).build();
 	}
 
 	@DELETE
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response delete(User entity) {
+	public Response delete(final User entity) {
 		DAOHelper.userDAO.delete(entity);
-		return Response.status(201).build();
+		return Response.status(Status.OK).build();
 	}
 
 }

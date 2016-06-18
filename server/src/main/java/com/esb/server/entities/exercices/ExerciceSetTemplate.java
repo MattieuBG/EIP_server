@@ -12,8 +12,12 @@ import org.mongodb.morphia.annotations.Reference;
 
 @Entity
 public class ExerciceSetTemplate {
+	public static enum EExerciceSetType {
+		HOMEWORK, EXAM
+	}
 	@Id
 	public String id = ObjectId.get().toString();
+	public EExerciceSetType type;
 	public Date todoDate;
 	@Reference
 	public List<Exercice> exercices;
