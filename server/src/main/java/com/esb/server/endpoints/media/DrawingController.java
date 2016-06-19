@@ -1,6 +1,7 @@
 package com.esb.server.endpoints.media;
 
 import com.esb.server.entities.media.Drawing;
+import com.esb.server.entities.media.Video;
 import com.esb.server.helpers.DAOHelper;
 import com.esb.server.services.media.DrawingService;
 import org.slf4j.Logger;
@@ -38,8 +39,11 @@ public class DrawingController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("id/{id}")
-    public Drawing getById(@PathParam("id") String id) {
-        return DAOHelper.drawingDAO.createQuery().filter("id =", id).get();
+    public Drawing getById(@PathParam("id") final String id) {
+        final Drawing drawing = DAOHelper.drawingDAO.createQuery().filter("id =", id).get();
+        if (drawing == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(id).build());
+        return drawing;
     }
 
     /**
@@ -52,8 +56,6 @@ public class DrawingController {
     public Response create(Drawing entity) {
         logger.debug("Drawing = "+entity);
         service.saveFile(entity, collectionName);
-        //service.saveDrawing(entity);
-        //DAOHelper.drawingDAO.save(entity);
         return Response.status(201).build();
     }
 
@@ -66,7 +68,6 @@ public class DrawingController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response update(Drawing entity) {
         service.updateFile(entity, collectionName);
-        //	service.updateDrawing(entity);
         return Response.status(201).build();
     }
 
@@ -79,7 +80,6 @@ public class DrawingController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response delete(Drawing entity) {
         service.deleteFile(entity, collectionName);
-        //service.deleteDrawing(entity);
         return Response.status(201).build();
     }
 }

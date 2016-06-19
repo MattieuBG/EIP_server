@@ -1,6 +1,7 @@
 package com.esb.server.endpoints.media;
 
 import com.esb.server.entities.media.Audio;
+import com.esb.server.entities.media.Image;
 import com.esb.server.helpers.DAOHelper;
 import com.esb.server.services.media.AudioService;
 import com.esb.server.services.media.ImageService;
@@ -40,8 +41,11 @@ public class AudioController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("id/{id}")
-    public Audio getById(@PathParam("id") String id) {
-        return DAOHelper.audioDAO.createQuery().filter("id =", id).get();
+    public Audio getById(@PathParam("id") final String id) {
+        final Audio audio = DAOHelper.audioDAO.createQuery().filter("id =", id).get();
+        if (audio == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(id).build());
+        return audio;
     }
 
     /**

@@ -38,8 +38,11 @@ public class ImageController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("id/{id}")
-    public Image getById(@PathParam("id") String id) {
-        return DAOHelper.imageDAO.createQuery().filter("id =", id).get();
+    public Image getById(@PathParam("id") final String id) {
+	final Image image = DAOHelper.imageDAO.createQuery().filter("id =", id).get();
+		if (image == null)
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(id).build());
+        return image;
     }
 
 	/**
@@ -52,8 +55,6 @@ public class ImageController {
 	public Response create(Image entity) {
         logger.debug("Image = "+entity);
         service.saveFile(entity, collectionName);
-        //service.saveImage(entity);
-        //DAOHelper.imageDAO.save(entity);
 		return Response.status(201).build();
 	}
 
@@ -66,7 +67,6 @@ public class ImageController {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response update(Image entity) {
         service.updateFile(entity, collectionName);
-	//	service.updateImage(entity);
 		return Response.status(201).build();
 	}
 
@@ -79,7 +79,6 @@ public class ImageController {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response delete(Image entity) {
 		service.deleteFile(entity, collectionName);
-		//service.deleteImage(entity);
 		return Response.status(201).build();
 	}
 }

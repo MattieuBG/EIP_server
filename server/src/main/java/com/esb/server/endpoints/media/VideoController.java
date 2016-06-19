@@ -1,5 +1,6 @@
 package com.esb.server.endpoints.media;
 
+import com.esb.server.entities.media.Image;
 import com.esb.server.entities.media.Video;
 import com.esb.server.helpers.DAOHelper;
 import com.esb.server.services.media.VideoService;
@@ -38,8 +39,11 @@ public class VideoController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("id/{id}")
-    public Video getById(@PathParam("id") String id) {
-        return DAOHelper.videoDAO.createQuery().filter("id =", id).get();
+    public Video getById(@PathParam("id") final String id) {
+        final Video video = DAOHelper.videoDAO.createQuery().filter("id =", id).get();
+        if (video == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(id).build());
+        return video;
     }
 
     /**

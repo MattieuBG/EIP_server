@@ -1,5 +1,6 @@
 package com.esb.server.endpoints.media;
 
+import com.esb.server.entities.media.Audio;
 import com.esb.server.entities.media.Course;
 import com.esb.server.helpers.DAOHelper;
 
@@ -23,8 +24,11 @@ public class CourseController {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
     @Path("id/{id}")
-	public Course getById(@PathParam("id") String id) {
-        return DAOHelper.courseDAO.createQuery().filter("id =", id).get();
+	public Course getById(@PathParam("id") final String id) {
+        final Course course = DAOHelper.courseDAO.createQuery().filter("id =", id).get();
+        if (course == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(id).build());
+        return course;
 	}
 
     @POST
