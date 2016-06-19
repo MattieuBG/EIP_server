@@ -13,7 +13,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
+import com.esb.server.entities.management.Module;
 import com.esb.server.entities.management.ModuleTemplate;
 import com.esb.server.entities.management.User;
 import com.esb.server.helpers.DAOHelper;
@@ -21,55 +23,102 @@ import com.esb.server.helpers.DAOHelper;
 @Path("modules/templates")
 public class ModuleTemplateController {
 
+	// all modules templates
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<ModuleTemplate> all() {
 		return DAOHelper.moduleTemplateDAO.find().asList();
 	}
 
+	// by id
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("{id}")
-	public ModuleTemplate getById(@PathParam("id") String id) {
-		ModuleTemplate template = DAOHelper.moduleTemplateDAO.createQuery()
-				.filter("id =", id).get();
+	public ModuleTemplate getById(@PathParam("id") final String id) {
+		final ModuleTemplate template = DAOHelper.moduleTemplateDAO.createQuery().filter("id =", id).get();
 		if (template == null)
-			throw new WebApplicationException(Response.status(
-					Response.Status.BAD_REQUEST).build());
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(id).build());
 		return template;
 	}
 
+	// by supervisor
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("supervisors/{id}")
-	public List<ModuleTemplate> getByUser(@PathParam("id") String id) {
-		User user = DAOHelper.userDAO.createQuery().filter("id =", id).get();
+	@Path("supervisor/{id}")
+	public List<ModuleTemplate> getByUser(@PathParam("id") final String id) {
+		final User user = DAOHelper.userDAO.createQuery().filter("id =", id).get();
 		if (user == null)
-			throw new WebApplicationException(Response
-					.status(Response.Status.BAD_REQUEST)
-					.entity("Unknown supervisor.").build());
-		return DAOHelper.moduleTemplateDAO.createQuery()
-				.filter("supervisors in", user).asList();
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Unknown supervisor " + id).build());
+		return DAOHelper.moduleTemplateDAO.createQuery().filter("supervisors in", user).asList();
 	}
 
+	// create
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response create(ModuleTemplate entity) {
+	public Response create(final ModuleTemplate entity) {
 		DAOHelper.moduleTemplateDAO.save(entity);
-		return Response.status(Response.Status.CREATED).build();
+		return Response.status(Status.CREATED).build();
 	}
 
+	// register
+	@POST
+	@Path("{id}/register")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response register(@PathParam("id") final String moduleId, final String userId) {
+		final ModuleTemplate template = DAOHelper.moduleTemplateDAO.createQuery().filter("id =", moduleId).get();
+		if (template == null)
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Unknown module " + moduleId).build());
+
+		final User user = DAOHelper.userDAO.createQuery().filter("id =", userId).get();
+		if (user == null)
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Unknown user " + userId).build());
+
+		Module module = DAOHelper.moduleDAO.createQuery().filter("user =", user).get();
+		if (module != null)
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("User already registered " + userId)
+					.build());
+
+		module = new Module();
+		module.user = user;
+		module.template = template;
+		DAOHelper.moduleDAO.save(module);
+		return Response.status(Status.CREATED).build();
+	}
+	// unregister
+	@POST
+	@Path("{id}/unregister")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response unregister(@PathParam("id") final String moduleId, final String userId) {
+		final ModuleTemplate template = DAOHelper.moduleTemplateDAO.createQuery().filter("id =", moduleId).get();
+		if (template == null)
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(moduleId).build());
+
+		final User user = DAOHelper.userDAO.createQuery().filter("id =", userId).get();
+		if (user == null)
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(moduleId).build());
+		final Module module = DAOHelper.moduleDAO.createQuery().filter("user =", user).get();
+		if (module == null)
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(moduleId).build());
+		DAOHelper.moduleDAO.delete(module);
+		return Response.status(Status.OK).build();
+	}
+
+	// update
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response update(ModuleTemplate entity) {
+	public Response update(final ModuleTemplate entity) {
 		DAOHelper.moduleTemplateDAO.save(entity);
-		return Response.status(Response.Status.OK).build();
+		return Response.status(Status.OK).build();
 	}
 
+	// delete
 	@DELETE
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response delete(ModuleTemplate entity) {
+	public Response delete(final ModuleTemplate entity) {
+		if (DAOHelper.moduleDAO.createQuery().filter("template =", entity).asList().size() != 0)
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
+					.entity("Users are registered to this, unregister them all before deleting module.").build());
 		DAOHelper.moduleTemplateDAO.delete(entity);
-		return Response.status(Response.Status.OK).build();
+		return Response.status(Status.OK).build();
 	}
 }

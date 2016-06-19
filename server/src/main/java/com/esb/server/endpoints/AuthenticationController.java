@@ -6,13 +6,17 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("login")
+import com.esb.server.entities.management.User;
+import com.esb.server.helpers.TokenHelper;
+
+@Path("authenticate")
 public class AuthenticationController {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response login()
+	public Response login(User user)
 	{
-		return Response.status(201).build();
+		String token = TokenHelper.setUser(user);
+		return Response.status(201).header("token", token).build();
 	}
 }

@@ -22,9 +22,6 @@ public abstract class AFile
 	private String name;
 	@Transient
 	private File binary;
-	@Transient
-	private String data;
-
 	private String description;
 	private Date creationDate;
 	private Date modifiedDate;
@@ -72,12 +69,7 @@ public abstract class AFile
 	public void setBinary(File binary) {
 		this.binary = binary;
 	}
-	public void setData(String data) {
-		this.data = data;
-	}
-	public String getData() {
-		return (this.data);
-	}
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
