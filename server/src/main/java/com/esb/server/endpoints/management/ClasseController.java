@@ -77,4 +77,39 @@ public class ClasseController {
 		DAOHelper.classeDAO.delete(entity);
 		return Response.status(Status.OK).build();
 	}
+
+	/**
+	 * Register student in Classe
+	 * @param id
+	 * @param entity
+     * @return
+     */
+    @POST
+	@Path("register/{id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response register(@PathParam("id") final String id, final Classe entity) {
+		final User user = DAOHelper.userDAO.createQuery().filter("id =", id).get();
+		if (user == null)
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(id).build());
+		user.classe = entity;
+		DAOHelper.userDAO.save(user);
+		return Response.status(Status.OK).build();
+	}
+
+	/**
+	 * Unregister student in Classe
+	 * @param id
+	 * @return
+     */
+	@POST
+	@Path("unregister/{id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response unregister(@PathParam("id") final String id) {
+		final User user = DAOHelper.userDAO.createQuery().filter("id =", id).get();
+		if (user == null)
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(id).build());
+		user.classe = null;
+		DAOHelper.userDAO.save(user);
+		return Response.status(Status.OK).build();
+	}
 }
