@@ -6,12 +6,11 @@ import org.mongodb.morphia.Morphia;
 import com.mongodb.MongoClient;
 
 public final class MorphiaHelper {
-	private Morphia morphia;
-	private Datastore datastore;
-	private static String url = "localhost";
-	//private static String url = "mongo";
-	//private static String url = "51.254.99.218";
-
+	private final Morphia morphia;
+	private final Datastore datastore;
+	// private static String url = "localhost";
+	// private static String url = "mongo";
+	private static String url = "51.254.99.218";
 
 	/** Holder */
 	private static class SingletonHolder {
@@ -23,12 +22,13 @@ public final class MorphiaHelper {
 	}
 
 	private MorphiaHelper() {
-		MongoClient mongoClient = new MongoClient(url);
+		final MongoClient mongoClient = new MongoClient(url);
 		this.morphia = new Morphia();
-		String databaseName = "eschoolbag";
+		final String databaseName = "eschoolbag";
 		this.datastore = morphia.createDatastore(mongoClient, databaseName);
-		
-		//morphia.getMapper().getConverters().addConverter(new LocalDateTimeConverter());
+
+		// morphia.getMapper().getConverters().addConverter(new
+		// LocalDateTimeConverter());
 	}
 
 	public static Morphia getMorphia() {

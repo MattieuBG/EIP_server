@@ -25,7 +25,6 @@ public class ExerciceSet {
 
 	public ExerciceSet() {
 		answers = Maps.newHashMap();
-		notation = new Notation();
 	}
 
 }

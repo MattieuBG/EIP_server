@@ -73,10 +73,10 @@ public class ModuleTemplateController {
 		if (user == null)
 			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Unknown user " + userId).build());
 
-		Module module = DAOHelper.moduleDAO.createQuery().filter("user =", user).get();
+		Module module = DAOHelper.moduleDAO.createQuery().filter("user =", user).filter("template =", template).get();
 		if (module != null)
-			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("User already registered " + userId)
-					.build());
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
+					.entity("User already registered to module template " + userId).build());
 
 		module = new Module();
 		module.user = user;

@@ -27,7 +27,6 @@ public class Module {
 	public List<ExerciceSet> exerciceSets;
 
 	public Module() {
-		notation = new Notation();
 		exerciceSets = Lists.newArrayList();
 	}
 
