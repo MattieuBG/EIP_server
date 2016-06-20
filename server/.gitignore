@@ -1,5 +1,7 @@
 /target/*
 
+!target/server.war
+
 ### Eclipse ###
 
 # Created by https://www.gitignore.io/api/eclipse

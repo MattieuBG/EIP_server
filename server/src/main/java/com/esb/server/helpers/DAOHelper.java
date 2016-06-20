@@ -8,7 +8,9 @@ import com.esb.server.dao.management.ClasseDAO;
 import com.esb.server.dao.management.ModuleDAO;
 import com.esb.server.dao.management.ModuleTemplateDAO;
 import com.esb.server.dao.management.UserDAO;
-import com.esb.server.dao.media.ImageDAO;
+
+import com.esb.server.dao.media.*;
+
 
 public class DAOHelper {
 	public static ConversationDAO conversationDAO = new ConversationDAO();
@@ -22,8 +24,13 @@ public class DAOHelper {
 	public static ModuleTemplateDAO moduleTemplateDAO = new ModuleTemplateDAO();
 	public static UserDAO userDAO = new UserDAO();
 
-	public static ImageDAO imageDAO = new ImageDAO();
-
+	public static AFileDAO aFileDAO = new AFileDAO();
+    public static ImageDAO imageDAO = new ImageDAO();
+    public static VideoDAO videoDAO = new VideoDAO();
+    public static AudioDAO audioDAO = new AudioDAO();
+    public static DrawingDAO drawingDAO = new DrawingDAO();
+	public static CourseDAO courseDAO = new CourseDAO();
+	
 	private DAOHelper() {
 
 	}
