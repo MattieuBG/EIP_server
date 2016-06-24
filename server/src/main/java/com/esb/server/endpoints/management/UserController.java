@@ -20,25 +20,28 @@ import jersey.repackaged.com.google.common.collect.Lists;
 import org.mongodb.morphia.Key;
 
 import com.esb.server.entities.exercices.ExerciceSetTemplate;
+import com.esb.server.entities.management.Classe;
 import com.esb.server.entities.management.Module;
 import com.esb.server.entities.management.ModuleTemplate;
 import com.esb.server.entities.management.User;
 import com.esb.server.helpers.DAOHelper;
+import com.mongodb.util.JSON;
 
-@Path("users")
+@Path("/users")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+// @Api(value = "users")
 public class UserController {
 
 	// @Authenticated
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<User> get() {
+	public List<User> getUsers() {
 		return DAOHelper.userDAO.find().asList();
 	}
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path("{id}")
-	public User getById(@PathParam("id") final String id) {
+	@Path("/{id}")
+	public User getUserById(@PathParam("id") final String id) {
 		final User user = DAOHelper.userDAO.createQuery().filter("id =", id).get();
 		if (user == null)
 			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(id).build());
@@ -46,9 +49,8 @@ public class UserController {
 	}
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path("module/{id}")
-	public List<User> getByModuleId(@PathParam("id") final String id) {
+	public List<User> getUsersByModuleTemplateId(@PathParam("id") final String id) {
 		final ModuleTemplate template = DAOHelper.moduleTemplateDAO.createQuery().filter("id =", id).get();
 		if (template == null)
 			return null;
@@ -61,12 +63,12 @@ public class UserController {
 	}
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path("exerciceset/{id} | examen/{id} | homeworks/{id}")
-	public List<User> getBySetId(@PathParam("id") final String id) {
+	public List<User> getUsersByExerciceSetTemplateId(@PathParam("id") final String id) {
 		final ExerciceSetTemplate template = DAOHelper.exerciceSetTemplateDAO.createQuery().filter("id =", id).get();
 		if (template == null)
-			return null;
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
+					.entity(JSON.serialize("Unknown exercice set template " + id)).build());
 
 		final List<Key<ModuleTemplate>> modTemplates = DAOHelper.moduleTemplateDAO.createQuery().filter("exerciceSets in", template)
 				.asKeyList();
@@ -79,23 +81,31 @@ public class UserController {
 		return users;
 	}
 
+	// by classe
+	@GET
+	@Path("classes/{id}")
+	public List<User> getUsersByClasseId(@PathParam("id") final String classeId) {
+		final Classe classe = DAOHelper.classeDAO.createQuery().filter("id =", classeId).get();
+		if (classe == null)
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
+					.entity(JSON.serialize("Unknown classe id " + classeId)).build());
+		return DAOHelper.userDAO.createQuery().filter("classe = ", classe).asList();
+	}
+
 	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response create(final User entity) {
+	public Response createUser(final User entity) {
 		DAOHelper.userDAO.save(entity);
 		return Response.status(Status.CREATED).build();
 	}
 
 	@PUT
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response update(final User entity) {
+	public Response updateUser(final User entity) {
 		DAOHelper.userDAO.save(entity);
 		return Response.status(Status.OK).build();
 	}
 
 	@DELETE
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response delete(final User entity) {
+	public Response deleteUser(final User entity) {
 		DAOHelper.userDAO.delete(entity);
 		return Response.status(Status.OK).build();
 	}

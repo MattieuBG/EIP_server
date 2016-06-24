@@ -15,46 +15,40 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.esb.server.entities.exercices.Exercice;
 import com.esb.server.entities.exercices.ExerciceSet;
 import com.esb.server.entities.exercices.ExerciceSetTemplate;
 import com.esb.server.entities.management.Module;
 import com.esb.server.entities.management.ModuleTemplate;
 import com.esb.server.entities.management.User;
 import com.esb.server.helpers.DAOHelper;
+import com.mongodb.util.JSON;
 
 @Path("exercicesets/templates")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 public class ExerciceSetTemplateController {
 
 	// all exercice set templates
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<ExerciceSetTemplate> get() {
+	public List<ExerciceSetTemplate> getExerciceSetTemplate() {
 		return DAOHelper.exerciceSetTemplateDAO.find().asList();
 	}
 
 	// by id
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path("{id}")
-	public ExerciceSetTemplate getById(@PathParam("id") final String id) {
+	public ExerciceSetTemplate getExerciceSetTemplateById(@PathParam("id") final String id) {
 		final ExerciceSetTemplate template = DAOHelper.exerciceSetTemplateDAO.createQuery().filter("id =", id).get();
 		if (template == null)
-			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(id).build());
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(JSON.serialize(id)).build());
 		return template;
-	}
-
-	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response create(final ExerciceSetTemplate entity) {
-		DAOHelper.exerciceSetTemplateDAO.save(entity);
-		return Response.status(Status.CREATED).build();
 	}
 
 	// register
 	@POST
 	@Path("{id}/register")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response register(@PathParam("id") final String templateId, final String userId) {
+	public Response registerToExerciceSetTemplate(@PathParam("id") final String templateId, final String userId) {
 		final ExerciceSetTemplate template = DAOHelper.exerciceSetTemplateDAO.createQuery().filter("id =", templateId).get();
 		if (template == null)
 			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
@@ -85,8 +79,7 @@ public class ExerciceSetTemplateController {
 	// unregister
 	@POST
 	@Path("{id}/unregister")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response unregister(@PathParam("id") final String templateId, final String userId) {
+	public Response unregisterFromExerciceSetTemplate(@PathParam("id") final String templateId, final String userId) {
 		final ExerciceSetTemplate exerciceSetTemplate = DAOHelper.exerciceSetTemplateDAO.createQuery().filter("id =", templateId).get();
 		if (exerciceSetTemplate == null)
 			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
@@ -118,19 +111,63 @@ public class ExerciceSetTemplateController {
 	}
 
 	// add exercice
+	@POST
+	@Path("{id}/exercices/add")
+	public ExerciceSetTemplate addExerciceToExerciceSetTemplate(@PathParam("id") final String templateId, final String exerciceId) {
+		final ExerciceSetTemplate exerciceSetTemplate = DAOHelper.exerciceSetTemplateDAO.createQuery().filter("id =", templateId).get();
+		if (exerciceSetTemplate == null)
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
+					.entity("Unknown exercice set template " + templateId).build());
+
+		Exercice exercice = DAOHelper.exerciceDAO.createQuery().filter("id =", exerciceId).get();
+		if (exercice == null)
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
+					.entity(JSON.serialize("Unknown exercice " + exerciceId)).build());
+
+		final List<ExerciceSetTemplate> templates = DAOHelper.exerciceSetTemplateDAO.createQuery().filter("exercices =", exerciceId)
+				.asList();
+		if (templates.size() != 0) {
+			exercice = new Exercice(exercice);
+			DAOHelper.exerciceDAO.save(exercice);
+		}
+		exerciceSetTemplate.exercices.add(exercice);
+		DAOHelper.exerciceSetTemplateDAO.save(exerciceSetTemplate);
+		return exerciceSetTemplate;
+	}
 
 	// remove exercice
+	@POST
+	@Path("{id}/exercices/remove")
+	public ExerciceSetTemplate removeExerciceFromExerciceSetTemplate(@PathParam("id") final String templateId, final String exerciceId) {
+		final ExerciceSetTemplate exerciceSetTemplate = DAOHelper.exerciceSetTemplateDAO.createQuery().filter("id =", templateId).get();
+		if (exerciceSetTemplate == null)
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
+					.entity(JSON.serialize("Unknown exercice set template " + templateId)).build());
+
+		final Exercice exercice = DAOHelper.exerciceDAO.createQuery().filter("id =", exerciceId).get();
+		if (exercice == null)
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
+					.entity(JSON.serialize("Unknown exercice " + exerciceId)).build());
+
+		exerciceSetTemplate.exercices.remove(exercice);
+		DAOHelper.exerciceSetTemplateDAO.save(exerciceSetTemplate);
+		return exerciceSetTemplate;
+	}
+
+	@POST
+	public Response createExerciceSetTemplate(final ExerciceSetTemplate entity) {
+		DAOHelper.exerciceSetTemplateDAO.save(entity);
+		return Response.status(Status.CREATED).build();
+	}
 
 	@PUT
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response update(final ExerciceSetTemplate entity) {
+	public Response updateExerciceSetTemplate(final ExerciceSetTemplate entity) {
 		DAOHelper.exerciceSetTemplateDAO.save(entity);
 		return Response.status(Status.OK).build();
 	}
 
 	@DELETE
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response delete(final ExerciceSetTemplate entity) {
+	public Response deleteExerciceSetTemplate(final ExerciceSetTemplate entity) {
 		if (DAOHelper.exerciceSetDAO.createQuery().filter("template =", entity).asList().size() != 0)
 			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
 					.entity("Users are registered to this, unregister them all before deleting exercice set.").build());

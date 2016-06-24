@@ -11,21 +11,26 @@ import org.mongodb.morphia.annotations.Id;
 
 @Entity
 public class Exercice {
-	public static enum EExerciceState {
-		TODO, DOING, FINISHED, CORRECTED
-	}
+	// public static enum EExerciceState {
+	// TODO, DOING, FINISHED, CORRECTED
+	// }
 
 	@Id
 	public String id = ObjectId.get().toString();
-	public EExerciceState state;
+	// public EExerciceState state;
 	public String title;
 	public String statement;
 	@Embedded
 	public List<Question> questions;
-	
-	public Exercice()
-	{
-		state = EExerciceState.TODO;
+
+	public Exercice() {
+		// state = EExerciceState.TODO;
 		questions = Lists.newArrayList();
+	}
+
+	public Exercice(final Exercice ex) {
+		title = ex.title;
+		statement = ex.statement;
+		questions = Lists.newArrayList(ex.questions);
 	}
 }

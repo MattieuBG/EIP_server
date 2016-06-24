@@ -20,96 +20,93 @@ import com.esb.server.entities.management.User;
 import com.esb.server.helpers.DAOHelper;
 
 @Path("classes")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 public class ClasseController {
 
 	// all classes
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<Classe> get() {
+	public List<Classe> getClasses() {
 		return DAOHelper.classeDAO.find().asList();
 	}
 
 	// by id
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path("{id}")
-	public Classe getById(@PathParam("id") final String id) {
-		final Classe classe = DAOHelper.classeDAO.createQuery()
-				.filter("id =", id).get();
+	public Classe getClasseById(@PathParam("id") final String id) {
+		final Classe classe = DAOHelper.classeDAO.createQuery().filter("id =", id).get();
 		if (classe == null)
-			throw new WebApplicationException(Response
-					.status(Response.Status.BAD_REQUEST).entity(id).build());
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(id).build());
 		return classe;
 	}
 
 	// by user
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path("user/{id}")
-	public List<Classe> getBySupervisor(@PathParam("id") final String id) {
-		final User user = DAOHelper.userDAO.createQuery().filter("id =", id)
-				.get();
+	@Path("supervisor/{id}")
+	public List<Classe> getClasseBySupervisor(@PathParam("id") final String supervisorId) {
+		final User user = DAOHelper.userDAO.createQuery().filter("id =", supervisorId).get();
 		if (user == null)
-			throw new WebApplicationException(Response
-					.status(Response.Status.BAD_REQUEST)
-					.entity("Unknown user " + id).build());
-		return DAOHelper.classeDAO.createQuery().filter("supervisor =", user)
-				.asList();
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Unknown user " + supervisorId).build());
+		return DAOHelper.classeDAO.createQuery().filter("supervisor =", user).asList();
 	}
 
 	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response create(final Classe entity) {
+	public Response createClasse(final Classe entity) {
 		DAOHelper.classeDAO.save(entity);
 		return Response.status(Status.CREATED).build();
 	}
 
 	@PUT
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response update(final Classe entity) {
+	public Response updateClasse(final Classe entity) {
 		DAOHelper.classeDAO.save(entity);
 		return Response.status(Status.OK).build();
 	}
 
 	@DELETE
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response delete(final Classe entity) {
+	public Response deleteClasse(final Classe entity) {
 		DAOHelper.classeDAO.delete(entity);
 		return Response.status(Status.OK).build();
 	}
 
-	/**
-	 * Register student in Classe
-	 * @param id
-	 * @param entity
-     * @return
-     */
-    @POST
-	@Path("register/{id}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response register(@PathParam("id") final String id, final Classe entity) {
-		final User user = DAOHelper.userDAO.createQuery().filter("id =", id).get();
-		if (user == null)
-			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(id).build());
-		user.classe = entity;
-		DAOHelper.userDAO.save(user);
-		return Response.status(Status.OK).build();
-	}
-
-	/**
-	 * Unregister student in Classe
-	 * @param id
-	 * @return
-     */
-	@POST
-	@Path("unregister/{id}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response unregister(@PathParam("id") final String id) {
-		final User user = DAOHelper.userDAO.createQuery().filter("id =", id).get();
-		if (user == null)
-			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(id).build());
-		user.classe = null;
-		DAOHelper.userDAO.save(user);
-		return Response.status(Status.OK).build();
-	}
+	// /**
+	// * Register student in Classe
+	// *
+	// * @param id
+	// * @param entity
+	// * @return
+	// */
+	// @POST
+	// @Path("/{id}/register")
+	// @Consumes(MediaType.APPLICATION_JSON)
+	// public Response registerToClasse(@PathParam("id") final String id, final
+	// Classe entity) {
+	// final User user = DAOHelper.userDAO.createQuery().filter("id =",
+	// id).get();
+	// if (user == null)
+	// throw new
+	// WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(id).build());
+	// user.classe = entity;
+	// DAOHelper.userDAO.save(user);
+	// return Response.status(Status.OK).build();
+	// }
+	//
+	// /**
+	// * Unregister student in Classe
+	// *
+	// * @param id
+	// * @return
+	// */
+	// @POST
+	// @Path("/{id}/unregister")
+	// @Consumes(MediaType.APPLICATION_JSON)
+	// public Response unregister(@PathParam("id") final String id) {
+	// final User user = DAOHelper.userDAO.createQuery().filter("id =",
+	// id).get();
+	// if (user == null)
+	// throw new
+	// WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(id).build());
+	// user.classe = null;
+	// DAOHelper.userDAO.save(user);
+	// return Response.status(Status.OK).build();
+	// }
 }

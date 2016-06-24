@@ -16,64 +16,55 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import com.esb.server.entities.exercices.ExerciceSet;
-import com.esb.server.entities.exercices.ExerciceSetTemplate;
-import com.esb.server.entities.management.Module;
-import com.esb.server.entities.management.ModuleTemplate;
 import com.esb.server.entities.management.User;
 import com.esb.server.helpers.DAOHelper;
 
 @Path("exercicesets")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 public class ExerciceSetController {
 
 	// all exercices sets
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<ExerciceSet> get() {
+	public List<ExerciceSet> getExerciceSets() {
 		return DAOHelper.exerciceSetDAO.find().asList();
 	}
 
 	// by id
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path("{id}")
-	public ExerciceSet getById(@PathParam("id") String id) {
-		ExerciceSet set = DAOHelper.exerciceSetDAO.createQuery().filter("id =", id).get();
+	public ExerciceSet getExerciceSetById(@PathParam("id") final String id) {
+		final ExerciceSet set = DAOHelper.exerciceSetDAO.createQuery().filter("id =", id).get();
 		if (set == null)
-			throw new WebApplicationException(Response.status(
-					Response.Status.BAD_REQUEST).entity(id).build());
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(id).build());
 		return set;
 	}
 
 	// by user
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path("user/{id}")
-	public List<ExerciceSet> getByUser(@PathParam("id") String id) {
-		User user = DAOHelper.userDAO.createQuery().filter("id =", id).get();
+	public List<ExerciceSet> getExerciceSetByUser(@PathParam("id") final String id) {
+		final User user = DAOHelper.userDAO.createQuery().filter("id =", id).get();
 		if (user == null)
-			throw new WebApplicationException(Response.status(
-					Response.Status.BAD_REQUEST).entity("Unknown user " + id).build());
-		return DAOHelper.exerciceSetDAO.createQuery().filter("user =", user)
-				.asList();
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Unknown user " + id).build());
+		return DAOHelper.exerciceSetDAO.createQuery().filter("user =", user).asList();
 	}
 
 	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response create(ExerciceSet entity) {
+	public Response createExerciceSet(final ExerciceSet entity) {
 		DAOHelper.exerciceSetDAO.save(entity);
 		return Response.status(Status.CREATED).build();
 	}
 
 	@PUT
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response update(ExerciceSet entity) {
+	public Response updateExerciceSet(final ExerciceSet entity) {
 		DAOHelper.exerciceSetDAO.save(entity);
 		return Response.status(Status.OK).build();
 	}
 
 	@DELETE
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response delete(ExerciceSet entity) {
+	public Response deleteExerciceSet(final ExerciceSet entity) {
 		DAOHelper.exerciceSetDAO.delete(entity);
 		return Response.status(Status.OK).build();
 	}

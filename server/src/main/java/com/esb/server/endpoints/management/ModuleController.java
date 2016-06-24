@@ -20,62 +20,50 @@ import com.esb.server.entities.management.User;
 import com.esb.server.helpers.DAOHelper;
 
 @Path("modules")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 public class ModuleController {
 
 	// all modules
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<Module> all() {
+	public List<Module> getModules() {
 		return DAOHelper.moduleDAO.find().asList();
 	}
 
 	// by id
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path("{id}")
-	public Module getById(@PathParam("id") final String id) {
-
-		final Module mod = DAOHelper.moduleDAO.createQuery().filter("id =", id)
-				.get();
+	public Module getModuleById(@PathParam("id") final String id) {
+		final Module mod = DAOHelper.moduleDAO.createQuery().filter("id =", id).get();
 		if (mod == null)
-			throw new WebApplicationException(Response
-					.status(Response.Status.BAD_REQUEST).entity(id).build());
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(id).build());
 		return mod;
 	}
 
 	// by user
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path("user/{id}")
-	public List<Module> allByUser(@PathParam("id") final String id) {
-		final User user = DAOHelper.userDAO.createQuery().filter("id =", id)
-				.get();
+	public List<Module> getModulesByUser(@PathParam("id") final String id) {
+		final User user = DAOHelper.userDAO.createQuery().filter("id =", id).get();
 		if (user == null)
-			throw new WebApplicationException(Response
-					.status(Response.Status.BAD_REQUEST)
-					.entity("Unknown user " + id).build());
-		;
-		return DAOHelper.moduleDAO.createQuery().filter("user =", user)
-				.asList();
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Unknown user " + id).build());;
+		return DAOHelper.moduleDAO.createQuery().filter("user =", user).asList();
 	}
 
 	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response create(final Module entity) {
+	public Response createModule(final Module entity) {
 		DAOHelper.moduleDAO.save(entity);
 		return Response.status(Status.CREATED).build();
 	}
 
 	@PUT
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response update(final Module entity) {
+	public Response updateModule(final Module entity) {
 		DAOHelper.moduleDAO.save(entity);
 		return Response.status(Status.OK).build();
 	}
 
 	@DELETE
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response delete(final Module entity) {
+	public Response deleteModule(final Module entity) {
 		DAOHelper.moduleDAO.delete(entity);
 		return Response.status(Status.OK).build();
 	}
