@@ -50,6 +50,8 @@ public class ModuleController {
 		return DAOHelper.moduleDAO.createQuery().filter("user =", user).asList();
 	}
 
+
+
 	@POST
 	public Response createModule(final Module entity) {
 		DAOHelper.moduleDAO.save(entity);

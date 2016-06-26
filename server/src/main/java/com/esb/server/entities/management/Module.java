@@ -2,6 +2,7 @@ package com.esb.server.entities.management;
 
 import java.util.List;
 
+import com.esb.server.entities.media.Image;
 import jersey.repackaged.com.google.common.collect.Lists;
 
 import org.bson.types.ObjectId;
@@ -25,6 +26,8 @@ public class Module {
 	public Notation notation;
 	@Reference
 	public List<ExerciceSet> exerciceSets;
+    @Reference
+    public Image icon;
 
 	public Module() {
 		exerciceSets = Lists.newArrayList();
