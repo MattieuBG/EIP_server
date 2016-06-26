@@ -46,7 +46,7 @@ public class ModuleController {
 	public List<Module> getModulesByUser(@PathParam("id") final String id) {
 		final User user = DAOHelper.userDAO.createQuery().filter("id =", id).get();
 		if (user == null)
-			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Unknown user " + id).build());;
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Unknown user " + id).build());
 		return DAOHelper.moduleDAO.createQuery().filter("user =", user).asList();
 	}
 

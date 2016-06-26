@@ -12,7 +12,7 @@ import org.mongodb.morphia.annotations.Reference;
 
 @Entity
 public class ExerciceSetTemplate {
-	public static enum EExerciceSetType {
+	public enum EExerciceSetType {
 		HOMEWORK, EXAM
 	}
 	@Id

@@ -10,7 +10,7 @@ import org.mongodb.morphia.annotations.Reference;
 
 @Entity
 public class User {
-	public static enum EUserRole {
+	public enum EUserRole {
 		PARENT, STUDENT, PROF, ADMIN
 	}
 

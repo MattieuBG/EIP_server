@@ -14,6 +14,10 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.esb.server.entities.management.Module;
+import com.esb.server.entities.management.User;
+import com.esb.server.entities.media.Image;
+import com.mongodb.util.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,10 +54,95 @@ public class ImageController {
 	@Path("{id}")
 	public Image getImageById(@PathParam("id") final String id) {
 		final Image image = DAOHelper.imageDAO.createQuery().filter("id =", id).get();
-		if (image == null)
-			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(id).build());
-		return image;
+
+        if (image == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(JSON.serialize("Unknown id " + id)).build());
+        return image;
 	}
+
+    @GET
+    @Path("user/{user_id}/module/{module_id} | module/{module_id}/user/{user_id}")
+    public List<Image> getImagesByIdAndModule(@PathParam("user_id") final String userId, @PathParam("module_id") final String moduleId) {
+        final User user = DAOHelper.userDAO.createQuery().filter("id =", userId).get();
+        final Module module = DAOHelper.moduleDAO.createQuery().filter("id =", moduleId).get();
+
+        if (user == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(JSON.serialize("Unknow user " + userId)).build());
+        if (module == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(JSON.serialize("Unknow module " + moduleId)).build());
+
+        return DAOHelper.imageDAO.createQuery().filter("owner =", user).filter("module =", module).asList();
+    }
+
+    @POST
+    @Path("{id}/module/set")
+    public Image setModuleForImage(@PathParam("id") final String imageId, final String moduleId) {
+        final Image image = DAOHelper.imageDAO.createQuery().filter("id =", imageId).get();
+        final Module module = DAOHelper.moduleDAO.createQuery().filter("id =", moduleId).get();
+
+        if (image == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
+                    .entity(JSON.serialize("Unknow image " + imageId)).build());
+        if (module == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
+                    .entity(JSON.serialize("Unknow module " + moduleId)).build());
+
+        if (image.getOwner() == null)
+            image.setOwner(module.user);
+        else if (!module.user.equals(image.getOwner()))
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
+                    .entity(JSON.serialize("Module does not belong to user " + image.getOwner())).build());
+
+        image.setModule(module);
+        DAOHelper.imageDAO.save(image);
+        return image;
+    }
+
+    @POST
+    @Path("{id}/module/unset")
+    public Image setModuleForImage(@PathParam("id") final String imageId) {
+        final Image image = DAOHelper.imageDAO.createQuery().filter("id =", imageId).get();
+
+        if (image == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
+                    .entity(JSON.serialize("Unknow image " + imageId)).build());
+
+        image.setModule(null);
+        DAOHelper.imageDAO.save(image);
+        return image;
+    }
+
+    @POST
+    @Path("{id}/owner/set")
+    public Image setOwnerForImage(@PathParam("id") final String imageId, final String ownerId) {
+        final Image image = DAOHelper.imageDAO.createQuery().filter("id =", imageId).get();
+        final User owner = DAOHelper.userDAO.createQuery().filter("id =", ownerId).get();
+
+        if (image == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
+                    .entity(JSON.serialize("Unknow image " + imageId)).build());
+        if (ownerId == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
+                    .entity(JSON.serialize("Unknow owner " + ownerId)).build());
+
+        image.setOwner(owner);
+        DAOHelper.imageDAO.save(image);
+        return image;
+    }
+
+    @POST
+    @Path("{id}/owner/unset")
+    public Image setOwnerForImage(@PathParam("id") final String imageId) {
+        final Image image = DAOHelper.imageDAO.createQuery().filter("id =", imageId).get();
+
+        if (image == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
+                    .entity(JSON.serialize("Unknow image " + imageId)).build());
+
+        image.setOwner(null);
+        DAOHelper.imageDAO.save(image);
+        return image;
+    }
 
 	/**
 	 * This method will create entry in Imqge collection and multiples entries
@@ -89,57 +178,3 @@ public class ImageController {
 		return Response.status(201).build();
 	}
 }
-
-/*  *//**
- * The method will return you all images store in database
- *
- * @return List of Image (List<Image>)
- */
-/*
- * @GET
- * 
- * @Produces(MediaType.APPLICATION_JSON) public List<Image> get() { return
- * DAOHelper.imageDAO.find().asList(); }
- *//**
- * This method will retrun you the image corresponding to the id given
- *
- * @return One Image
- */
-/*
- * @GET
- * 
- * @Produces(MediaType.APPLICATION_JSON)
- * 
- * @Path("id/{id}") public Image getById(@PathParam("id") String id) { return
- * DAOHelper.imageDAO.createQuery().filter("id =", id).get(); }
- *//**
- * This method will create entry in Imqge collection and multiples entries in
- * Image.chunks and Image.files. Both are linked by and id (GidFS id is store in
- * Image Collection)
- */
-/*
- * @POST
- * 
- * @Consumes(MediaType.APPLICATION_JSON) public Response create(Image entity) {
- * logger.debug("Image = "+entity); //service.saveImage(entity);
- * //DAOHelper.imageDAO.save(entity); return Response.status(201).build(); }
- *//**
- * This method will upade entry in Imqge collection and remove entries in
- * Image.chunks and Image.files to recreate them GridFS API haven't manage this
- * kind of function.
- */
-/*
- * @PUT
- * 
- * @Consumes(MediaType.APPLICATION_JSON) public Response update(Image entity) {
- * // service.updateImage(entity); return Response.status(201).build(); }
- *//**
- * This method will delete entry in Imqge collection and entries in
- * Image.chunks and Image.files. In this case GridFS does the work by herself.
- */
-/*
- * @DELETE
- * 
- * @Consumes(MediaType.APPLICATION_JSON) public Response delete(Image entity) {
- * //service.deleteImage(entity); return Response.status(201).build(); }
- */

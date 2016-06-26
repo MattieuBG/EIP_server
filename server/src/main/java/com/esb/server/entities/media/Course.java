@@ -10,38 +10,35 @@ import com.esb.server.entities.management.User;
  */
 public class Course extends AFile {
 	/*
-	 * ############################### # Attributes #
+	 * ###############################
+	 * #          Attributes         #
 	 * ###############################
 	 */
 	private String html;
-	@Reference
-	public User owner;
-	@Reference
-	public Module module;
 	/*
-	 * ############################### # Getter #
+	 * ###############################
+	 * #           Getters           #
 	 * ###############################
 	 */
 	public String getHtml() {
 		return html;
 	}
 	/*
-	 * ############################### # Setter #
+	 * ###############################
+	 * #          Setters            #
 	 * ###############################
 	 */
 	public void setHtml(final String html) {
 		this.html = html;
 	}
 	/*
-	 * ############################### # Other Methods #
+	 * ###############################
+	 * #       Others Methods        #
 	 * ###############################
 	 */
-	public String toString() {
-		String attributes;
 
-		attributes = "[id : " + this.getId() + ", name : " + this.getName() + ", html : " + this.getHtml() + ", description : "
-				+ this.getDescription() + ", create : " + this.getCreationDate() + ", lastUpdate : " + this.getModifiedDate()
-				+ ", deleted : " + this.getDeletedDate() + "]";
-		return attributes;
-	}
+    @Override
+    public String toString() {
+        return "Course{}";
+    }
 }

@@ -3,9 +3,12 @@ package com.esb.server.entities.media;
 import java.io.File;
 import java.util.Date;
 
+import com.esb.server.entities.management.Module;
+import com.esb.server.entities.management.User;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.annotations.Transient;
 
 @Entity
@@ -26,6 +29,17 @@ public abstract class AFile
 	private Date creationDate;
 	private Date modifiedDate;
 	private Date deletedDate;
+
+	/*
+	###############################
+	#         Relation            #
+	###############################
+	*/
+	@Reference
+	private User owner;
+	@Reference
+	private Module module;
+
 	/*
 	###############################
 	#         Getter              #
@@ -55,6 +69,12 @@ public abstract class AFile
 	public Date getDeletedDate() {
 		return deletedDate;
 	}
+	public Module getModule() {
+	return module;
+}
+	public User getOwner() {
+		return owner;
+	}
 	/*
 	###############################
 	#         Setter              #
@@ -69,7 +89,6 @@ public abstract class AFile
 	public void setBinary(File binary) {
 		this.binary = binary;
 	}
-
 	public void setDescription(String description) {
 		this.description = description;
 	}
@@ -84,6 +103,12 @@ public abstract class AFile
 	}
 	public void setIdGridFs(String idGridFs) {
 		this.idGridFs = idGridFs;
+	}
+	public void setModule(Module module) {
+	this.module = module;
+}
+	public void setOwner(User owner) {
+		this.owner = owner;
 	}
 	/*
 	###############################

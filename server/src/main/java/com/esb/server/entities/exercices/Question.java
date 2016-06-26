@@ -10,7 +10,7 @@ import org.mongodb.morphia.annotations.Id;
 
 @Entity
 public class Question {
-	public static enum EExerciceType {
+	public enum EExerciceType {
 		QCM, TEXT
 	}
 
