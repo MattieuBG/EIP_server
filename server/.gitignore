@@ -4,6 +4,7 @@
 
 ## A retirer en cas de modification du MorphiaHelper
 /src/main/java/com/esb/server/helpers/MorphiaHelper.java
+src/main/java/com/esb/server/helpers/MorphiaHelper.java
 
 ### Eclipse ###
 
