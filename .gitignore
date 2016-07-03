@@ -1,5 +1,8 @@
 server/target/*
 
+## Untrack MorphiaHelper
+server/src/main/java/com/esb/server/helpers/MorphiaHelper.java
+
 ### Eclipse ###
 
 # Created by https://www.gitignore.io/api/eclipse
