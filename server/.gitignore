@@ -2,6 +2,9 @@
 
 !target/server.war
 
+## A retirer en cas de modification du MorphiaHelper
+src/main/java/com/esb/server/helpers/MorphiaHelper.java
+
 ### Eclipse ###
 
 # Created by https://www.gitignore.io/api/eclipse
