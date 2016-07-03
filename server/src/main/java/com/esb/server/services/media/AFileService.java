@@ -11,7 +11,7 @@ import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
+import javax.xml.bind.DatatypeConverter;
 import java.util.Date;
 
 
@@ -26,6 +26,14 @@ public class AFileService {
     final protected Mongo mongo     = new Mongo("localhost", 27017);
     final protected DB db           = mongo.getDB("eschoolbag");
 
+
+    public void save(AFile fileToSave, String fileType){
+        if (isExist(fileToSave.getId(), fileType) == true)
+            updateFile(fileToSave, fileType);
+        else
+            saveFile(fileToSave, fileType);
+    }
+
     /**
      * Save an image in Image collection and in Image.files and Image.chunks (GridFS collection)
      * First, image will be saved via GridFS and then we get back the id and saved it Image collection
@@ -33,23 +41,54 @@ public class AFileService {
      */
     public void saveFile(AFile fileToSave, String fileType){
         GridFS gridFSImage = new GridFS(this.db, fileType);
-        GridFSInputFile gfsFile = null; // take the input stream coming the file we uploaded via our HTML page
+        byte[] base64Decoded = DatatypeConverter.parseBase64Binary(fileToSave.getBinary());
 
-        try {
-            /* create the file (the multiple chunks) from the binary of the image we wanted to save */
-            //gfsFile = gridFSImage.createFile(fileToSave.getBinary());
-            gfsFile = gridFSImage.createFile(fileToSave.getBinary());
-        } catch (IOException e) {
-            logger.error(e.toString());
-            e.printStackTrace();
-        }
+        /* create the file (the multiple chunks) from the binary of the image we wanted to save */
+        GridFSInputFile gfsFile = gridFSImage.createFile(base64Decoded);
+
         /* Set the name of image in metadata Entity of GridFS named entityName.files */
         gfsFile.setFilename(fileToSave.getName());
         gfsFile.save();
+
         /* Set the gridFS's id in the Mongo's Entity attribute (idGridFs) */
         fileToSave.setIdGridFs(gfsFile.get("_id").toString());
+
+        /* Dates set */
+        fileToSave.setCreationDate(new Date());
+        fileToSave.setModifiedDate(new Date());
+
         /* Same things but with the Mongo Entity */
         DAOHelper.aFileDAO.save(fileToSave);
+    }
+
+    /**
+     * Save an image in Image collection and in Image.files and Image.chunks (GridFS collection)
+     * First, image will be updated via GridFS and then we update Image collection
+     * @param fileToUpdate is the object you want to update
+     */
+    public void updateFile(AFile fileToUpdate, String fileType) {
+        GridFS gridFSImage = new GridFS(this.db, fileType);
+        ObjectId idToDelete = new ObjectId(fileToUpdate.getIdGridFs()); // Build obj to research via id
+
+        byte[] base64Decoded = DatatypeConverter.parseBase64Binary(fileToUpdate.getBinary());
+
+        /* Find record in GridFS table to delete */
+        GridFSFile entryToRemove = gridFSImage.findOne(idToDelete);
+        /* Remove record */
+        gridFSImage.remove(entryToRemove);
+        GridFSInputFile gfsFile = gridFSImage.createFile(base64Decoded);
+
+        /* As there is no update method with GridFS we delete and remake record
+           So here we reset the previous name */
+        gfsFile.setFilename(fileToUpdate.getName());
+        gfsFile.save(); // save in gridFS
+
+        /* update modifiedDate to now */
+        fileToUpdate.setModifiedDate(new Date());
+
+        /* update the ID of GridFS in Image collection */
+        fileToUpdate.setIdGridFs(gfsFile.get("_id").toString());
+        DAOHelper.aFileDAO.save(fileToUpdate);
     }
 
     /**
@@ -65,42 +104,44 @@ public class AFileService {
         GridFSFile entryToRemove = gridFSImage.findOne(idToDelete);
         /* Remove record */
         gridFSImage.remove(entryToRemove);
+
+        /* Pour quand on conservera les enregistrements avec une date deleted de défini
+        pour le moment on les delete
+        fileToDelete.setDeletedDate(new Date());*/
+
         /* Same find but in mongo entity */
         DAOHelper.aFileDAO.delete(fileToDelete);
     }
 
     /**
-     * Save an image in Image collection and in Image.files and Image.chunks (GridFS collection)
-     * First, image will be updated via GridFS and then we update Image collection
-     * @param fileToUpdate is the object you want to update
+     * Check if the id already exist in database so if i need to save or update the entry
+     * @param id
+     * @param type
+     * @return
      */
-    public void updateFile(AFile fileToUpdate, String fileType) {
-        GridFS gridFSImage = new GridFS(this.db, fileType);
-        GridFSInputFile gfsFile = null; // take the input stream coming the file we uploaded via our HTML page
-        ObjectId idToDelete = new ObjectId(fileToUpdate.getIdGridFs()); // Build obj to research via id
+    private Boolean isExist(final String id, final String type)
+    {
+        Boolean bool = true;
 
-        /* Find record in GridFS table to delete */
-        GridFSFile entryToRemove = gridFSImage.findOne(idToDelete);
-        /* Remove record */
-        gridFSImage.remove(entryToRemove);
-        try {
-            gfsFile = gridFSImage.createFile(fileToUpdate.getBinary());
-        } catch (IOException e) {
-            e.printStackTrace();
-            logger.error(e.toString());
+        switch (type){
+            case "Image":
+                bool = (DAOHelper.imageDAO.createQuery().filter("id =", id).get() != null) ? true : false;
+                break;
+            case "Video":
+                bool = (DAOHelper.videoDAO.createQuery().filter("id =", id).get() != null) ? true : false;
+                break;
+            case "Audio":
+                bool = (DAOHelper.audioDAO.createQuery().filter("id =", id).get() != null) ? true : false;
+                break;
+            case "Course":
+                bool = (DAOHelper.courseDAO.createQuery().filter("id =", id).get() != null) ? true : false;
+                break;
+            case "Drawing":
+                bool = (DAOHelper.drawingDAO.createQuery().filter("id =", id).get() != null) ? true : false;
+                break;
         }
-        /* As there is no update method with GridFS we delete and remake record
-           So here we reset the previous name */
-        gfsFile.setFilename(fileToUpdate.getName());
-        gfsFile.save(); // save in gridFS
-        /* update modifiedDate to now */
-        fileToUpdate.setModifiedDate(new Date());
-        /* update the ID of GridFS in Image collection */
-        fileToUpdate.setIdGridFs(gfsFile.get("_id").toString());
-        DAOHelper.aFileDAO.save(fileToUpdate);
+        return bool;
     }
-
-
 }
 /**
  * Get image in Image collection and in Image.files and Image.chunks (GridFS collection)

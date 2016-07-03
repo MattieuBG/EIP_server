@@ -39,7 +39,7 @@ public class AudioService extends AFileService {
             e.printStackTrace();
             logger.error(e.toString());
         }
-        audioToGet.setBinary(binaryOfAudio);
+        //audioToGet.setBinary(binaryOfAudio);
         return (audioToGet);
     }
 

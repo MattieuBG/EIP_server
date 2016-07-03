@@ -1,6 +1,5 @@
 package com.esb.server.entities.media;
 
-import java.io.File;
 import java.util.Date;
 
 import com.esb.server.entities.management.Module;
@@ -23,8 +22,8 @@ public abstract class AFile
 	private String id = ObjectId.get().toString();
 	private String idGridFs = ObjectId.get().toString();
 	private String name;
-	@Transient
-	private File binary;
+    @Transient
+    private String binary;
 	private String description;
 	private Date creationDate;
 	private Date modifiedDate;
@@ -54,7 +53,7 @@ public abstract class AFile
 	public String getName() {
 		return name;
 	}
-	public File getBinary() {
+	public String getBinary() {
 		return binary;
 	}
 	public String getDescription() {
@@ -86,7 +85,7 @@ public abstract class AFile
 	public void setName(String name) {
 		this.name = name;
 	}
-	public void setBinary(File binary) {
+	public void setBinary(String binary) {
 		this.binary = binary;
 	}
 	public void setDescription(String description) {

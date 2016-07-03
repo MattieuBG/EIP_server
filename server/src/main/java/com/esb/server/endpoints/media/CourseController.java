@@ -20,6 +20,8 @@ import com.esb.server.entities.management.User;
 import com.esb.server.entities.media.Course;
 import com.esb.server.helpers.DAOHelper;
 import com.mongodb.util.JSON;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by alex on 18/06/16. Project name : Eschoolbag
@@ -28,6 +30,9 @@ import com.mongodb.util.JSON;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class CourseController {
+
+    final static Logger logger = LoggerFactory.getLogger(ImageController.class);
+
 	@GET
 	public List<Course> getCourses() {
 		return DAOHelper.courseDAO.find().asList();
@@ -57,6 +62,8 @@ public class CourseController {
 		return DAOHelper.courseDAO.createQuery().filter("owner =", user).filter("module =", module).asList();
 	}
 
+
+
 	@POST
 	@Path("{id}/module/set")
 	public Course setModuleForCourse(@PathParam("id") final String courseId, final String moduleId) {
@@ -79,7 +86,7 @@ public class CourseController {
 					.entity(JSON.serialize("Module does not belong to user " + course.getOwner())).build());
 
 		course.setModule(module);
-		DAOHelper.courseDAO.save(course);
+        DAOHelper.courseDAO.save(course);
 		return course;
 	}
 
@@ -101,6 +108,8 @@ public class CourseController {
 		DAOHelper.courseDAO.save(entity);
 		return entity;
 	}
+
+
 
 	@PUT
 	public Course updateCourse(final Course entity) {

@@ -39,7 +39,7 @@ public class VideoService extends AFileService {
             e.printStackTrace();
             logger.error(e.toString());
         }
-        videoToGet.setBinary(binaryOfVideo);
+       // videoToGet.setBinary(binaryOfVideo);
         return (videoToGet);
     }
 

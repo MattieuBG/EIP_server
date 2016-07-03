@@ -1,21 +1,22 @@
 package com.esb.server.services.media;
 
+import com.esb.server.entities.management.Module;
+import com.esb.server.entities.management.User;
 import com.esb.server.entities.media.Image;
 import com.esb.server.helpers.DAOHelper;
-import com.mongodb.DB;
-import com.mongodb.Mongo;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
-import com.mongodb.gridfs.GridFSFile;
-import com.mongodb.gridfs.GridFSInputFile;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.xml.bind.DatatypeConverter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,68 +30,98 @@ public class ImageService extends AFileService {
     /**
      * Get image in Image collection and in Image.files and Image.chunks (GridFS collection)
      * First we get GridFSID and then get back image with this id
-     * @param imageToGet is the object you want to get
+     * @param id is the id that i'll use to get back object
      */
-    public Image getImage(Image imageToGet) {
+    // http://stackoverflow.com/questions/20706783/put-byte-array-to-json-and-vice-versa
+    public Image getImage(final String id) {
         GridFS gridFSImage = new GridFS(db, "Image");
-        ObjectId idToGet = new ObjectId(imageToGet.getIdGridFs()); // Build obj to research via id
+        Image image = DAOHelper.imageDAO.createQuery().filter("id =", id).get();
+
+        if (image == null) return (image);
+
+        ObjectId idToGet = new ObjectId(image.getIdGridFs()); // Build obj to research via id
+
         File binaryOfImage = new File("Image");
 
         /* Find GridFS Entity record with the field idGridFS saved in imageToGet */
         GridFSDBFile entryToGet = gridFSImage.findOne(idToGet);
+
         try {
             entryToGet.writeTo(binaryOfImage);
         } catch (IOException e) {
             e.printStackTrace();
             logger.error(e.toString());
         }
-        imageToGet.setBinary(binaryOfImage);
-        return (imageToGet);
+
+        byte[] bFile = new byte[(int) binaryOfImage.length()];
+        try {
+            FileInputStream fileInputStream = new FileInputStream(binaryOfImage);
+            fileInputStream.read(bFile);
+            fileInputStream.close();
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        image.setBinary(DatatypeConverter.printBase64Binary(bFile));
+        return (image);
     }
 
     /**
      * Get image in Image collection and in Image.files and Image.chunks (GridFS collection)
      * First we get GridFSID and then get back image with this id
      */
-    public List<Image> getAllImage() {
+    public List<Image> getImages() {
         List<Image> imgList = new ArrayList<Image>();
 
         imgList = DAOHelper.imageDAO.find().asList();
         System.out.println("imgList.Size = " + imgList.size());
         for (int i = 0 ; i < imgList.size() ;i++) {
-            imgList.set(i, getImage(imgList.get(i)));
+            imgList.set(i, getImage(imgList.get(i).getId()));
             System.out.println("List["+i+"] = "+imgList.get(i));
         }
         return (imgList);
     }
+
+    public List<Image> getImagesByIdAndModule(final User user, final Module module)
+    {
+        List<Image> imageList = DAOHelper.imageDAO.createQuery().filter("owner =", user).filter("module =", module).asList();
+
+        for (int i = 0; i < imageList.size(); i++) {
+            imageList.set(i, getImage(imageList.get(i).getId()));
+            System.out.println("List["+i+"] = "+imageList.get(i));
+        }
+        return imageList;
+    }
 }
-
-
 
 /**
  * Save an image in Image collection and in Image.files and Image.chunks (GridFS collection)
  * First, image will be saved via GridFS and then we get back the id and saved it Image collection
  * @param imageToSave is the object you want to save
  */
-   /* public void saveImage(Image imageToSave){
+    /*public void saveImage(Image imageToSave){
         GridFS gridFSImage = new GridFS(this.db, "Image");
         GridFSInputFile gfsFile = null; // take the input stream coming the file we uploaded via our HTML page
 
         try {
-            *//* create the file (the multiple chunks) from the binary of the image we wanted to save *//*
+             //create the file (the multiple chunks) from the binary of the image we wanted to save
             gfsFile = gridFSImage.createFile(imageToSave.getBinary());
         } catch (IOException e) {
             logger.error(e.toString());
             e.printStackTrace();
         }
-        *//* Set the name of image in metadata Entity of GridFS named entityName.files *//*
+         //Set the name of image in metadata Entity of GridFS named entityName.files
         gfsFile.setFilename(imageToSave.getName());
         gfsFile.save();
-        *//* Set the gridFS's id in the Mongo's Entity attribute (idGridFs) *//*
+         //Set the gridFS's id in the Mongo's Entity attribute (idGridFs)
         imageToSave.setIdGridFs(gfsFile.get("_id").toString());
-        *//* Same things but with the Mongo Entity *//*
+         //Same things but with the Mongo Entity
         DAOHelper.imageDAO.save(imageToSave);
     }*/
+
 
 /**
  * Delete an image in Image collection and in Image.files and Image.chunks (GridFS collection)

@@ -1,5 +1,6 @@
 package com.esb.server.endpoints.media;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -17,6 +18,7 @@ import javax.ws.rs.core.Response;
 import com.esb.server.entities.management.Module;
 import com.esb.server.entities.management.User;
 import com.esb.server.entities.media.Image;
+import com.esb.server.services.media.AFileService;
 import com.mongodb.util.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,45 +35,60 @@ public class ImageController {
 	final static Logger logger = LoggerFactory.getLogger(ImageController.class);
 	final static String collectionName = "Image";
 
-	private final ImageService service = new ImageService();
+	private final ImageService serviceImage = new ImageService();
+	private final AFileService serviceAFile = new ImageService();
+
 
 	/**
 	 * The method will return you all images store in database
-	 *
-	 * @return List of Image (List<Image>)
+	 * @return List of Image (List<Image>)c
 	 */
 	@GET
-	public List<Image> getImages() {
-		return DAOHelper.imageDAO.find().asList();
+	public List<Image> getImages() throws IOException {
+		return serviceImage.getImages();
 	}
 
 	/**
 	 * This method will retrun you the image corresponding to the id given
-	 *
 	 * @return One Image
 	 */
 	@GET
 	@Path("{id}")
 	public Image getImageById(@PathParam("id") final String id) {
-		final Image image = DAOHelper.imageDAO.createQuery().filter("id =", id).get();
+        Image image = serviceImage.getImage(id);
 
         if (image == null)
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(JSON.serialize("Unknown id " + id)).build());
+
         return image;
 	}
 
     @GET
     @Path("user/{user_id}/module/{module_id} | module/{module_id}/user/{user_id}")
-    public List<Image> getImagesByIdAndModule(@PathParam("user_id") final String userId, @PathParam("module_id") final String moduleId) {
+    public List<Image> getImagesByIdAndModule(@PathParam("user_id") final String userId, @PathParam("module_id") final String moduleId) throws IOException {
         final User user = DAOHelper.userDAO.createQuery().filter("id =", userId).get();
         final Module module = DAOHelper.moduleDAO.createQuery().filter("id =", moduleId).get();
+        final List<Image> image = serviceImage.getImagesByIdAndModule(user, module);
 
         if (user == null)
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(JSON.serialize("Unknow user " + userId)).build());
         if (module == null)
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(JSON.serialize("Unknow module " + moduleId)).build());
 
-        return DAOHelper.imageDAO.createQuery().filter("owner =", user).filter("module =", module).asList();
+        return image;
+                //DAOHelper.imageDAO.createQuery().filter("owner =", user).filter("module =", module).asList();
+    }
+
+
+    /**
+     * This method will create entry in Imqge collection and multiples entries
+     * in Image.chunks and Image.files. Both are linked by and id (GidFS id is
+     * store in Image Collection)
+     */
+    @POST
+    public Response createImage(final Image entity) {
+        serviceAFile.save(entity, collectionName);
+        return Response.status(Response.Status.CREATED).build();
     }
 
     @POST
@@ -94,7 +111,9 @@ public class ImageController {
                     .entity(JSON.serialize("Module does not belong to user " + image.getOwner())).build());
 
         image.setModule(module);
-        DAOHelper.imageDAO.save(image);
+        //serviceAFile.updateFile(image, collectionName);
+        serviceAFile.save(image, collectionName);
+        //DAOHelper.imageDAO.save(image);
         return image;
     }
 
@@ -108,7 +127,9 @@ public class ImageController {
                     .entity(JSON.serialize("Unknow image " + imageId)).build());
 
         image.setModule(null);
-        DAOHelper.imageDAO.save(image);
+        //serviceAFile.updateFile(image, collectionName);
+        serviceAFile.save(image, collectionName);
+        //DAOHelper.imageDAO.save(image);
         return image;
     }
 
@@ -126,7 +147,9 @@ public class ImageController {
                     .entity(JSON.serialize("Unknow owner " + ownerId)).build());
 
         image.setOwner(owner);
-        DAOHelper.imageDAO.save(image);
+        //serviceAFile.updateFile(image, collectionName);
+        serviceAFile.save(image, collectionName);
+        //DAOHelper.imageDAO.save(image);
         return image;
     }
 
@@ -140,21 +163,12 @@ public class ImageController {
                     .entity(JSON.serialize("Unknow image " + imageId)).build());
 
         image.setOwner(null);
-        DAOHelper.imageDAO.save(image);
+        //serviceAFile.updateFile(image, collectionName);
+        serviceAFile.save(image, collectionName);
+        //DAOHelper.imageDAO.save(image);
         return image;
     }
 
-	/**
-	 * This method will create entry in Imqge collection and multiples entries
-	 * in Image.chunks and Image.files. Both are linked by and id (GidFS id is
-	 * store in Image Collection)
-	 */
-	@POST
-	public Response createImage(final Image entity) {
-		logger.debug("Image = " + entity);
-		service.saveFile(entity, collectionName);
-		return Response.status(201).build();
-	}
 
 	/**
 	 * This method will upade entry in Imqge collection and remove entries in
@@ -163,7 +177,8 @@ public class ImageController {
 	 */
 	@PUT
 	public Response updateImage(final Image entity) {
-		service.updateFile(entity, collectionName);
+        serviceAFile.save(entity, collectionName);
+        //serviceAFile.updateFile(entity, collectionName);
 		return Response.status(201).build();
 	}
 
@@ -174,7 +189,7 @@ public class ImageController {
 	 */
 	@DELETE
 	public Response delete(final Image entity) {
-		service.deleteFile(entity, collectionName);
+        serviceAFile.deleteFile(entity, collectionName);
 		return Response.status(201).build();
 	}
 }

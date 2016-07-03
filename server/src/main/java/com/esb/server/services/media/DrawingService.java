@@ -39,7 +39,7 @@ public class DrawingService extends AFileService {
             e.printStackTrace();
             logger.error(e.toString());
         }
-        drawingToGet.setBinary(binaryOfDrawing);
+       // drawingToGet.setBinary(binaryOfDrawing);
         return (drawingToGet);
     }
 
