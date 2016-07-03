@@ -38,13 +38,12 @@ public class ImageController {
 	private final ImageService serviceImage = new ImageService();
 	private final AFileService serviceAFile = new ImageService();
 
-
 	/**
 	 * The method will return you all images store in database
 	 * @return List of Image (List<Image>)c
 	 */
 	@GET
-	public List<Image> getImages() throws IOException {
+	public List<Image> getImages() {
 		return serviceImage.getImages();
 	}
 
@@ -65,7 +64,7 @@ public class ImageController {
 
     @GET
     @Path("user/{user_id}/module/{module_id} | module/{module_id}/user/{user_id}")
-    public List<Image> getImagesByIdAndModule(@PathParam("user_id") final String userId, @PathParam("module_id") final String moduleId) throws IOException {
+    public List<Image> getImagesByIdAndModule(@PathParam("user_id") final String userId, @PathParam("module_id") final String moduleId) {
         final User user = DAOHelper.userDAO.createQuery().filter("id =", userId).get();
         final Module module = DAOHelper.moduleDAO.createQuery().filter("id =", moduleId).get();
         final List<Image> image = serviceImage.getImagesByIdAndModule(user, module);

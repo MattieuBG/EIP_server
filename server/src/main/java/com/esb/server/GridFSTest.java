@@ -7,6 +7,8 @@ import com.esb.server.entities.management.User;
 import com.esb.server.entities.media.Course;
 import com.esb.server.entities.media.Image;
 
+import com.esb.server.entities.media.Pdf;
+import com.esb.server.helpers.ConvertHelper;
 import com.esb.server.helpers.DAOHelper;
 import com.esb.server.services.media.AFileService;
 import com.esb.server.services.media.ImageService;
@@ -35,29 +37,41 @@ import java.util.Date;
 public class GridFSTest {
 
     final static Logger logger = LoggerFactory.getLogger(ImageService.class);
-
-/*    private static ImageDAO dao    = new ImageDAO();*/
+    private static final ConvertHelper convertHelper = new ConvertHelper();
 
     public static void main(String[] args) throws IOException {
         ImageService imageService = new ImageService();
         AFileService aFileservice = new AFileService();
 
-        ModuleTemplate moduleTemplate = new ModuleTemplate();
+        /*ModuleTemplate moduleTemplate = new ModuleTemplate();
         Image image = createImage();
         moduleTemplate.name = "French";
         moduleTemplate.icon = image;
+        DAOHelper.moduleTemplateDAO.save(moduleTemplate);*/
 
-        DAOHelper.moduleTemplateDAO.save(moduleTemplate);
-
-/*        User user = new User();
+        /*User user = new User();
         user.firstName = "alex";
         user.lastName = "test";
         user.birthDate = new Date();
         DAOHelper.userDAO.save(user);*/
-/*
-        Image image = createImage();
-        System.out.println("Save");
+
+        /*Image image = createImage();
+        System.out.println("Save Image");
         aFileservice.save(image, "Image");*/
+
+
+        Pdf pdf = createPdf();
+        System.out.println("Save PDF");
+        aFileservice.save(pdf, "Pdf");
+    }
+
+    private  static  Pdf createPdf(){
+        Pdf pdf = new Pdf();
+        pdf.setName("PDF hehe");
+
+        File binary = new File("/home/alex/Project/EIP/CurrentVersion/Serveur/server/src/main/java/com/esb/server/S23-PLANNING.pdf");
+        pdf.setBinary(convertHelper.takeFileReturnBase64String(binary));
+        return pdf;
     }
 
     private static Image createImage() {
@@ -69,21 +83,7 @@ public class GridFSTest {
 
         File binaryOfImage = new File("/home/alex/Project/EIP/CurrentVersion/Serveur/server/src/main/java/com/esb/server/DSC_0779.NEF");
 
-
-        byte[] bFile = new byte[(int) binaryOfImage.length()];
-        try {
-            FileInputStream fileInputStream = new FileInputStream(binaryOfImage);
-            fileInputStream.read(bFile);
-            fileInputStream.close();
-        }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        image.setBinary(DatatypeConverter.printBase64Binary(bFile));
-
+        image.setBinary(convertHelper.takeFileReturnBase64String(binaryOfImage));
         return image;
     }
 }

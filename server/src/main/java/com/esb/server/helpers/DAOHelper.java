@@ -30,6 +30,7 @@ public class DAOHelper {
     public static AudioDAO audioDAO = new AudioDAO();
     public static DrawingDAO drawingDAO = new DrawingDAO();
 	public static CourseDAO courseDAO = new CourseDAO();
+    public static PdfDAO pdfDAO = new PdfDAO();
 	
 	private DAOHelper() {
 

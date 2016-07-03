@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import javax.xml.bind.DatatypeConverter;
 import java.util.Date;
 
-
 /**
  * Created by alex on 11/06/16.
  * Project name : Eschoolbag
@@ -28,10 +27,15 @@ public class AFileService {
 
 
     public void save(AFile fileToSave, String fileType){
-        if (isExist(fileToSave.getId(), fileType) == true)
+        if (isExist(fileToSave.getId(), fileType) == true) {
+            logger.info("update");
             updateFile(fileToSave, fileType);
-        else
+        }
+        else{
+            logger.info("save");
             saveFile(fileToSave, fileType);
+        }
+
     }
 
     /**
@@ -139,10 +143,17 @@ public class AFileService {
             case "Drawing":
                 bool = (DAOHelper.drawingDAO.createQuery().filter("id =", id).get() != null) ? true : false;
                 break;
+            case "Pdf":
+                bool = (DAOHelper.pdfDAO.createQuery().filter("id =", id).get() != null) ? true : false;
+                break;
         }
         return bool;
     }
 }
+
+
+
+
 /**
  * Get image in Image collection and in Image.files and Image.chunks (GridFS collection)
  * First we get GridFSID and then get back image with this id

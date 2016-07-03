@@ -3,18 +3,13 @@ package com.esb.server.services.media;
 import com.esb.server.entities.management.Module;
 import com.esb.server.entities.management.User;
 import com.esb.server.entities.media.Image;
+import com.esb.server.helpers.ConvertHelper;
 import com.esb.server.helpers.DAOHelper;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.xml.bind.DatatypeConverter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +21,7 @@ import java.util.List;
 public class ImageService extends AFileService {
 
     final static Logger logger = LoggerFactory.getLogger(ImageService.class);
+    private final ConvertHelper convertHelper = new ConvertHelper();
 
     /**
      * Get image in Image collection and in Image.files and Image.chunks (GridFS collection)
@@ -41,31 +37,12 @@ public class ImageService extends AFileService {
 
         ObjectId idToGet = new ObjectId(image.getIdGridFs()); // Build obj to research via id
 
-        File binaryOfImage = new File("Image");
-
         /* Find GridFS Entity record with the field idGridFS saved in imageToGet */
         GridFSDBFile entryToGet = gridFSImage.findOne(idToGet);
 
-        try {
-            entryToGet.writeTo(binaryOfImage);
-        } catch (IOException e) {
-            e.printStackTrace();
-            logger.error(e.toString());
-        }
+        String stringConvertBase64 = convertHelper.takeGridFSDBFileReturnBase64String(entryToGet);
 
-        byte[] bFile = new byte[(int) binaryOfImage.length()];
-        try {
-            FileInputStream fileInputStream = new FileInputStream(binaryOfImage);
-            fileInputStream.read(bFile);
-            fileInputStream.close();
-        }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        image.setBinary(DatatypeConverter.printBase64Binary(bFile));
+        image.setBinary(stringConvertBase64);
         return (image);
     }
 
