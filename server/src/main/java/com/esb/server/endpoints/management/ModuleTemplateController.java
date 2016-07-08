@@ -109,7 +109,7 @@ public class ModuleTemplateController {
 				throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
 						.entity(JSON.serialize("Session already exists " + session.id)).build());
 		final User user;
-		if (session.endDate.before(session.startDate) || session.startDate.before(new Date()) || session.speaker == null
+		if (session.endDate.before(session.startDate) || session.speaker == null
 				|| (user = DAOHelper.userDAO.createQuery().filter("id =", session.speaker.id).get()) == null)
 			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
 					.entity(JSON.serialize("Invalid session " + session)).build());
