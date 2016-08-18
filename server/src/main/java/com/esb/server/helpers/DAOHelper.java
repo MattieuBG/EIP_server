@@ -7,10 +7,15 @@ import com.esb.server.dao.exercices.ExerciceSetTemplateDAO;
 import com.esb.server.dao.management.ClasseDAO;
 import com.esb.server.dao.management.ModuleDAO;
 import com.esb.server.dao.management.ModuleTemplateDAO;
+import com.esb.server.dao.management.PlanningSessionDAO;
 import com.esb.server.dao.management.UserDAO;
-
-import com.esb.server.dao.media.*;
-
+import com.esb.server.dao.media.AFileDAO;
+import com.esb.server.dao.media.AudioDAO;
+import com.esb.server.dao.media.CourseDAO;
+import com.esb.server.dao.media.DrawingDAO;
+import com.esb.server.dao.media.ImageDAO;
+import com.esb.server.dao.media.PdfDAO;
+import com.esb.server.dao.media.VideoDAO;
 
 public class DAOHelper {
 	public static ConversationDAO conversationDAO = new ConversationDAO();
@@ -22,16 +27,17 @@ public class DAOHelper {
 	public static ClasseDAO classeDAO = new ClasseDAO();
 	public static ModuleDAO moduleDAO = new ModuleDAO();
 	public static ModuleTemplateDAO moduleTemplateDAO = new ModuleTemplateDAO();
+	public static PlanningSessionDAO planningSessionDAO = new PlanningSessionDAO();
 	public static UserDAO userDAO = new UserDAO();
 
 	public static AFileDAO aFileDAO = new AFileDAO();
-    public static ImageDAO imageDAO = new ImageDAO();
-    public static VideoDAO videoDAO = new VideoDAO();
-    public static AudioDAO audioDAO = new AudioDAO();
-    public static DrawingDAO drawingDAO = new DrawingDAO();
+	public static ImageDAO imageDAO = new ImageDAO();
+	public static VideoDAO videoDAO = new VideoDAO();
+	public static AudioDAO audioDAO = new AudioDAO();
+	public static DrawingDAO drawingDAO = new DrawingDAO();
 	public static CourseDAO courseDAO = new CourseDAO();
-    public static PdfDAO pdfDAO = new PdfDAO();
-	
+	public static PdfDAO pdfDAO = new PdfDAO();
+
 	private DAOHelper() {
 
 	}

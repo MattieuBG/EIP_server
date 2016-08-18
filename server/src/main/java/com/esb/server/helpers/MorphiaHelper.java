@@ -8,8 +8,8 @@ import com.mongodb.MongoClient;
 public final class MorphiaHelper {
 	private final Morphia morphia;
 	private final Datastore datastore;
-	 //private static String url = "localhost";
-	 //private static String url = "mongo";
+	// private static String url = "localhost";
+	// private static String url = "mongo";
 	private static String url = "51.254.99.218";
 
 	/** Holder */

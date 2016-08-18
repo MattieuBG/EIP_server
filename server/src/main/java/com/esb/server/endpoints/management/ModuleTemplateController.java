@@ -1,6 +1,5 @@
 package com.esb.server.endpoints.management;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -113,8 +112,8 @@ public class ModuleTemplateController {
 				|| (user = DAOHelper.userDAO.createQuery().filter("id =", session.speaker.id).get()) == null)
 			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
 					.entity(JSON.serialize("Invalid session " + session)).build());
-		session.speaker = user;
 		template.sessions.add(session);
+		DAOHelper.planningSessionDAO.save(session);
 		DAOHelper.moduleTemplateDAO.save(template);
 		return template;
 	}
@@ -129,6 +128,7 @@ public class ModuleTemplateController {
 		for (final PlanningSession s : template.sessions)
 			if (s.id.equals(session.id)) {
 				template.sessions.remove(s);
+				DAOHelper.planningSessionDAO.delete(s);
 				DAOHelper.moduleTemplateDAO.save(template);
 				return template;
 			}
