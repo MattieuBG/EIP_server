@@ -4,10 +4,13 @@ import com.esb.server.dao.conversation.ConversationDAO;
 import com.esb.server.dao.exercices.ExerciceDAO;
 import com.esb.server.dao.exercices.ExerciceSetDAO;
 import com.esb.server.dao.exercices.ExerciceSetTemplateDAO;
+import com.esb.server.dao.management.AbsenceDAO;
 import com.esb.server.dao.management.ClasseDAO;
+import com.esb.server.dao.management.DelayDAO;
 import com.esb.server.dao.management.ModuleDAO;
 import com.esb.server.dao.management.ModuleTemplateDAO;
 import com.esb.server.dao.management.PlanningSessionDAO;
+import com.esb.server.dao.management.SanctionDAO;
 import com.esb.server.dao.management.UserDAO;
 import com.esb.server.dao.media.AFileDAO;
 import com.esb.server.dao.media.AudioDAO;
@@ -29,6 +32,10 @@ public class DAOHelper {
 	public static ModuleTemplateDAO moduleTemplateDAO = new ModuleTemplateDAO();
 	public static PlanningSessionDAO planningSessionDAO = new PlanningSessionDAO();
 	public static UserDAO userDAO = new UserDAO();
+
+	public static AbsenceDAO absenceDAO = new AbsenceDAO();
+	public static DelayDAO delayDAO = new DelayDAO();
+	public static SanctionDAO sanctionDAO = new SanctionDAO();
 
 	public static AFileDAO aFileDAO = new AFileDAO();
 	public static ImageDAO imageDAO = new ImageDAO();

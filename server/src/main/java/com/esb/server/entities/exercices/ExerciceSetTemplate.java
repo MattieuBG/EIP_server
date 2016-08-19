@@ -18,6 +18,7 @@ public class ExerciceSetTemplate {
 	}
 	@Id
 	public String id = ObjectId.get().toString();
+	public String title;
 	public EExerciceSetType type;
 	@Reference
 	public PlanningSession todoDate;

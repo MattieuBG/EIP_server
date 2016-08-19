@@ -20,6 +20,7 @@ import com.esb.server.entities.exercices.ExerciceSet;
 import com.esb.server.entities.exercices.ExerciceSetTemplate;
 import com.esb.server.entities.management.Module;
 import com.esb.server.entities.management.ModuleTemplate;
+import com.esb.server.entities.management.PlanningSession;
 import com.esb.server.entities.management.User;
 import com.esb.server.helpers.DAOHelper;
 import com.mongodb.util.JSON;
@@ -150,6 +151,35 @@ public class ExerciceSetTemplateController {
 					.entity(JSON.serialize("Unknown exercice " + exerciceId)).build());
 
 		exerciceSetTemplate.exercices.remove(exercice);
+		DAOHelper.exerciceSetTemplateDAO.save(exerciceSetTemplate);
+		return exerciceSetTemplate;
+	}
+
+	@POST
+	@Path("{id}/session/add")
+	public ExerciceSetTemplate addSessionToExerciceSetTemplate(@PathParam("id") final String templateId, final String sessionId) {
+		final ExerciceSetTemplate exerciceSetTemplate = DAOHelper.exerciceSetTemplateDAO.createQuery().filter("id =", templateId).get();
+		if (exerciceSetTemplate == null)
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
+					.entity(JSON.serialize("Unknown exercice set template " + templateId)).build());
+
+		final PlanningSession session = DAOHelper.planningSessionDAO.createQuery().filter("id =", sessionId).get();
+		if (session == null)
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
+					.entity(JSON.serialize("Unknown session " + sessionId)).build());
+		exerciceSetTemplate.todoDate = session;
+		DAOHelper.exerciceSetTemplateDAO.save(exerciceSetTemplate);
+		return exerciceSetTemplate;
+	}
+
+	@POST
+	@Path("{id}/session/remove")
+	public ExerciceSetTemplate removeSessionFromExerciceSetTemplate(@PathParam("id") final String templateId) {
+		final ExerciceSetTemplate exerciceSetTemplate = DAOHelper.exerciceSetTemplateDAO.createQuery().filter("id =", templateId).get();
+		if (exerciceSetTemplate == null)
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
+					.entity(JSON.serialize("Unknown exercice set template " + templateId)).build());
+		exerciceSetTemplate.todoDate = null;
 		DAOHelper.exerciceSetTemplateDAO.save(exerciceSetTemplate);
 		return exerciceSetTemplate;
 	}
