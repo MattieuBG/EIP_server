@@ -126,6 +126,18 @@ public class ModuleTemplateController {
 		final ModuleTemplate template = DAOHelper.moduleTemplateDAO.createQuery().filter("id =", moduleId).get();
 		if (template == null)
 			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(moduleId).build());
+
+		final PlanningSession session = DAOHelper.planningSessionDAO.createQuery().filter("id =", sessionId).get();
+		if (session == null)
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Unknown session " + sessionId).build());
+
+		final List<ExerciceSetTemplate> ests = DAOHelper.exerciceSetTemplateDAO.createQuery().filter("todoDate =", session).asList();
+		if (ests != null && !ests.isEmpty())
+			for (final ExerciceSetTemplate est : ests) {
+				est.todoDate = null;
+				DAOHelper.exerciceSetTemplateDAO.save(est);
+			}
+
 		for (final PlanningSession s : template.sessions)
 			if (s.id.equals(sessionId)) {
 				template.sessions.remove(s);
