@@ -42,12 +42,21 @@ public class SanctionController {
 
 	// by user
 	@GET
-	@Path("user/{id}")
-	public List<Sanction> getSanctionsByUser(@PathParam("id") final String id) {
+	@Path("student/{id}")
+	public List<Sanction> getSanctionsByStudent(@PathParam("id") final String id) {
 		final User user = DAOHelper.userDAO.createQuery().filter("id =", id).get();
 		if (user == null)
-			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Unknown user " + id).build());
-		return DAOHelper.sanctionDAO.createQuery().filter("user =", user).asList();
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Unknown student " + id).build());
+		return DAOHelper.sanctionDAO.createQuery().filter("student =", user).asList();
+	}
+
+	@GET
+	@Path("supervisor/{id}")
+	public List<Sanction> getSanctionsBySupervisor(@PathParam("id") final String id) {
+		final User user = DAOHelper.userDAO.createQuery().filter("id =", id).get();
+		if (user == null)
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Unknown supervisor " + id).build());
+		return DAOHelper.sanctionDAO.createQuery().filter("supervisor =", user).asList();
 	}
 
 	@POST

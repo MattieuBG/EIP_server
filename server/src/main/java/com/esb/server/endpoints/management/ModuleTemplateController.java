@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.esb.server.entities.exercices.ExerciceSetTemplate;
 import com.esb.server.entities.management.Module;
 import com.esb.server.entities.management.ModuleTemplate;
 import com.esb.server.entities.management.PlanningSession;
@@ -121,19 +122,57 @@ public class ModuleTemplateController {
 	// rm session
 	@POST
 	@Path("{id}/sessions/remove")
-	public ModuleTemplate removePlanningSessionFromModuleTemplate(@PathParam("id") final String moduleId, final PlanningSession session) {
+	public ModuleTemplate removePlanningSessionFromModuleTemplate(@PathParam("id") final String moduleId, final String sessionId) {
 		final ModuleTemplate template = DAOHelper.moduleTemplateDAO.createQuery().filter("id =", moduleId).get();
 		if (template == null)
 			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(moduleId).build());
 		for (final PlanningSession s : template.sessions)
-			if (s.id.equals(session.id)) {
+			if (s.id.equals(sessionId)) {
 				template.sessions.remove(s);
 				DAOHelper.planningSessionDAO.delete(s);
 				DAOHelper.moduleTemplateDAO.save(template);
 				return template;
 			}
-		throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(JSON.serialize("Unknown session " + session))
-				.build());
+		throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
+				.entity(JSON.serialize("Unknown session " + sessionId)).build());
+	}
+
+	// link exercice set template to module template
+	@POST
+	@Path("{id}/exerciceset/add")
+	public ModuleTemplate addExerciceSetTemplateToModuleTemplate(@PathParam("id") final String moduleId, final String estId) {
+		final ModuleTemplate template = DAOHelper.moduleTemplateDAO.createQuery().filter("id =", moduleId).get();
+		if (template == null)
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Unknown module template " + moduleId)
+					.build());
+
+		final ExerciceSetTemplate exerciceSetTemplate = DAOHelper.exerciceSetTemplateDAO.createQuery().filter("id =", estId).get();
+		if (exerciceSetTemplate == null)
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Unknown exercice set template " + estId)
+					.build());
+
+		template.exerciceSetTemplates.add(exerciceSetTemplate);
+		DAOHelper.moduleTemplateDAO.save(template);
+		return template;
+	}
+
+	// unlink exercice set template from module template
+	@POST
+	@Path("{id}/exerciceset/remove")
+	public ModuleTemplate removeExerciceSetTemplateFromModuleTemplate(@PathParam("id") final String moduleId, final String estId) {
+		final ModuleTemplate template = DAOHelper.moduleTemplateDAO.createQuery().filter("id =", moduleId).get();
+		if (template == null)
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Unknown module template " + moduleId)
+					.build());
+
+		for (final ExerciceSetTemplate t : template.exerciceSetTemplates)
+			if (t.id.equals(estId)) {
+				template.exerciceSetTemplates.remove(t);
+				DAOHelper.moduleTemplateDAO.save(template);
+				return template;
+			}
+		throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
+				.entity(JSON.serialize("Unknown exercice set template " + estId)).build());
 	}
 
 	// create
