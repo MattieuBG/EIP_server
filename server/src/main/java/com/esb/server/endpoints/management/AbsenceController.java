@@ -58,7 +58,7 @@ public class AbsenceController {
 	}
 
 	@PUT
-	public Absence updateModule(final Absence entity) {
+	public Absence updateAbsence(final Absence entity) {
 		DAOHelper.absenceDAO.save(entity);
 		return entity;
 	}
