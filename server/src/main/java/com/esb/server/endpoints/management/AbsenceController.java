@@ -34,11 +34,11 @@ public class AbsenceController {
 	// by id
 	@GET
 	@Path("{id}")
-	public Module getAbsenceById(@PathParam("id") final String id) {
-		final Module mod = DAOHelper.moduleDAO.createQuery().filter("id =", id).get();
-		if (mod == null)
+	public Absence getAbsenceById(@PathParam("id") final String id) {
+		final Absence abs = DAOHelper.absenceDAO.createQuery().filter("id =", id).get();
+		if (abs == null)
 			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(id).build());
-		return mod;
+		return abs;
 	}
 
 	// by user
