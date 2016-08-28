@@ -16,8 +16,10 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import com.esb.server.entities.exercices.ExerciceSet;
+import com.esb.server.entities.management.Module;
 import com.esb.server.entities.management.User;
 import com.esb.server.helpers.DAOHelper;
+import com.google.common.collect.Lists;
 
 @Path("exercicesets")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -47,7 +49,15 @@ public class ExerciceSetController {
 		final User user = DAOHelper.userDAO.createQuery().filter("id =", id).get();
 		if (user == null)
 			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Unknown user " + id).build());
-		return DAOHelper.exerciceSetDAO.createQuery().filter("user =", user).asList();
+
+		final List<Module> mods = DAOHelper.moduleDAO.createQuery().filter("user =", user).asList();
+		if (mods == null)
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No modules for user " + id).build());
+
+		final List<ExerciceSet> sets = Lists.newArrayList();
+		for (final Module mod : mods)
+			sets.addAll(mod.exerciceSets);
+		return sets;
 	}
 
 	@POST
