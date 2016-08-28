@@ -1,5 +1,6 @@
 package com.esb.server.endpoints.media;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -15,13 +16,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.esb.server.entities.management.Module;
 import com.esb.server.entities.management.User;
 import com.esb.server.entities.media.Course;
 import com.esb.server.helpers.DAOHelper;
 import com.mongodb.util.JSON;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Created by alex on 18/06/16. Project name : Eschoolbag
@@ -31,7 +33,7 @@ import org.slf4j.LoggerFactory;
 @Produces(MediaType.APPLICATION_JSON)
 public class CourseController {
 
-    final static Logger logger = LoggerFactory.getLogger(ImageController.class);
+	final static Logger logger = LoggerFactory.getLogger(ImageController.class);
 
 	@GET
 	public List<Course> getCourses() {
@@ -43,8 +45,9 @@ public class CourseController {
 	public Course getCourseById(@PathParam("id") final String id) {
 		final Course course = DAOHelper.courseDAO.createQuery().filter("id =", id).get();
 
-			if (course == null)
-			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(JSON.serialize("Unknown id " + id)).build());
+		if (course == null)
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(JSON.serialize("Unknown id " + id))
+					.build());
 		return course;
 	}
 
@@ -52,17 +55,17 @@ public class CourseController {
 	@Path("user/{user_id}/module/{module_id} | module/{module_id}/user/{user_id}")
 	public List<Course> getCoursesByIdAndModule(@PathParam("user_id") final String userId, @PathParam("module_id") final String moduleId) {
 		final User user = DAOHelper.userDAO.createQuery().filter("id =", userId).get();
-        final Module module = DAOHelper.moduleDAO.createQuery().filter("id =", moduleId).get();
+		final Module module = DAOHelper.moduleDAO.createQuery().filter("id =", moduleId).get();
 
 		if (user == null)
-			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(JSON.serialize("Unknow user " + userId)).build());
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(JSON.serialize("Unknow user " + userId))
+					.build());
 		if (module == null)
-			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(JSON.serialize("Unknow module " + moduleId)).build());
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
+					.entity(JSON.serialize("Unknow module " + moduleId)).build());
 
 		return DAOHelper.courseDAO.createQuery().filter("owner =", user).filter("module =", module).asList();
 	}
-
-
 
 	@POST
 	@Path("{id}/module/set")
@@ -86,7 +89,7 @@ public class CourseController {
 					.entity(JSON.serialize("Module does not belong to user " + course.getOwner())).build());
 
 		course.setModule(module);
-        DAOHelper.courseDAO.save(course);
+		DAOHelper.courseDAO.save(course);
 		return course;
 	}
 
@@ -105,14 +108,14 @@ public class CourseController {
 
 	@POST
 	public Course createCourse(final Course entity) {
+		entity.setCreationDate(new Date());
 		DAOHelper.courseDAO.save(entity);
 		return entity;
 	}
 
-
-
 	@PUT
 	public Course updateCourse(final Course entity) {
+		entity.setModifiedDate(new Date());
 		DAOHelper.courseDAO.save(entity);
 		return entity;
 	}
