@@ -10,7 +10,7 @@ import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Reference;
 
 import com.esb.server.entities.exercices.ExerciceSetTemplate;
-import com.esb.server.entities.media.Image;
+import com.esb.server.entities.media.ImageFTP;
 
 @Entity
 public class ModuleTemplate {
@@ -24,7 +24,7 @@ public class ModuleTemplate {
 	@Reference
 	public List<User> supervisors;
 	@Reference
-	public Image icon;
+	public ImageFTP icon;
 
 	public ModuleTemplate() {
 		exerciceSetTemplates = Lists.newArrayList();

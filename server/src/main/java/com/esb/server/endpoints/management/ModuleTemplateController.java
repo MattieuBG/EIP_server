@@ -20,6 +20,7 @@ import com.esb.server.entities.management.Module;
 import com.esb.server.entities.management.ModuleTemplate;
 import com.esb.server.entities.management.PlanningSession;
 import com.esb.server.entities.management.User;
+import com.esb.server.entities.media.ImageFTP;
 import com.esb.server.helpers.DAOHelper;
 import com.mongodb.util.JSON;
 
@@ -185,6 +186,35 @@ public class ModuleTemplateController {
 			}
 		throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
 				.entity(JSON.serialize("Unknown exercice set template " + estId)).build());
+	}
+
+	@POST
+	@Path("{id}/icon/add")
+	public ModuleTemplate addIconForModuleTemplate(@PathParam("id") final String moduleId, final String iconId) {
+		final ModuleTemplate template = DAOHelper.moduleTemplateDAO.createQuery().filter("id =", moduleId).get();
+		if (template == null)
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Unknown module template " + moduleId)
+					.build());
+
+		final ImageFTP icon = DAOHelper.imageFTPDAO.createQuery().filter("id =", iconId).get();
+		if (icon == null)
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Unknown icon " + iconId).build());
+
+		template.icon = icon;
+		DAOHelper.moduleTemplateDAO.save(template);
+		return template;
+	}
+
+	@POST
+	@Path("{id}/icon/remove")
+	public ModuleTemplate removeIconFromModuleTemplate(@PathParam("id") final String moduleId) {
+		final ModuleTemplate template = DAOHelper.moduleTemplateDAO.createQuery().filter("id =", moduleId).get();
+		if (template == null)
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Unknown module template " + moduleId)
+					.build());
+		template.icon = null;
+		DAOHelper.moduleTemplateDAO.save(template);
+		return template;
 	}
 
 	// create
