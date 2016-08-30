@@ -55,16 +55,20 @@ public class CourseController {
 	@Path("user/{user_id}/module/{module_id} | module/{module_id}/user/{user_id}")
 	public List<Course> getCoursesByIdAndModule(@PathParam("user_id") final String userId, @PathParam("module_id") final String moduleId) {
 		final User user = DAOHelper.userDAO.createQuery().filter("id =", userId).get();
-		final Module module = DAOHelper.moduleDAO.createQuery().filter("id =", moduleId).get();
-
 		if (user == null)
 			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(JSON.serialize("Unknow user " + userId))
 					.build());
+
+		final Module module = DAOHelper.moduleDAO.createQuery().filter("id =", moduleId).get();
 		if (module == null)
 			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
 					.entity(JSON.serialize("Unknow module " + moduleId)).build());
 
-		return DAOHelper.courseDAO.createQuery().filter("owner =", user).filter("module =", module).asList();
+		final List<Course> courses = DAOHelper.courseDAO.createQuery().filter("owner =", user).filter("module =", module).asList();
+		final List<Course> shared = DAOHelper.courseDAO.createQuery().filter("sharedUsers =", user).filter("module =", module).asList();
+
+		courses.addAll(shared);
+		return courses;
 	}
 
 	@POST
@@ -102,6 +106,29 @@ public class CourseController {
 					.entity(JSON.serialize("Unknow course " + courseId)).build());
 
 		course.setModule(null);
+		DAOHelper.courseDAO.save(course);
+		return course;
+	}
+
+	@POST
+	@Path("{id}/share/{userId}")
+	public Course shareCourseWithUser(@PathParam("id") final String courseId, @PathParam("userId") final String userId) {
+		final Course course = DAOHelper.courseDAO.createQuery().filter("id =", courseId).get();
+		if (course == null)
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
+					.entity(JSON.serialize("Unknow course " + courseId)).build());
+
+		final User user = DAOHelper.userDAO.createQuery().filter("id =", userId).get();
+		if (user == null)
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(JSON.serialize("Unknow user " + userId))
+					.build());
+
+		for (final User u : course.sharedUsers)
+			if (u.equals(user))
+				throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
+						.entity(JSON.serialize("Already shared with user " + userId)).build());
+
+		course.sharedUsers.add(user);
 		DAOHelper.courseDAO.save(course);
 		return course;
 	}

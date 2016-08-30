@@ -17,6 +17,7 @@ import com.esb.server.dao.media.AudioDAO;
 import com.esb.server.dao.media.CourseDAO;
 import com.esb.server.dao.media.DrawingDAO;
 import com.esb.server.dao.media.ImageDAO;
+import com.esb.server.dao.media.ImageFTPDAO;
 import com.esb.server.dao.media.PdfDAO;
 import com.esb.server.dao.media.VideoDAO;
 
@@ -43,6 +44,8 @@ public class DAOHelper {
 	public static AudioDAO audioDAO = new AudioDAO();
 	public static DrawingDAO drawingDAO = new DrawingDAO();
 	public static CourseDAO courseDAO = new CourseDAO();
+
+	public static ImageFTPDAO imageFTPDAO = new ImageFTPDAO();
 	public static PdfDAO pdfDAO = new PdfDAO();
 
 	private DAOHelper() {
